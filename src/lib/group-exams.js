@@ -73,9 +73,12 @@ export async function createGroup(input,source='unknown'){
  'Not enough valid questions in this subject and topic. Select a broader topic.');
  await checkRoomCreationLimit(source);
  const chosen=shuffle(available).slice(0,questionCount);
+ const requested=Array.isArray(input?.usernames)?input.usernames.map(name=>clean(name,48).toLowerCase()):[];
+ if(requested.length&&(requested.length!==capacity||requested.some(name=>!/^[a-z][a-z0-9_-]{2,23}$/.test(name))||new Set(requested).size!==capacity))
+   throw new Error('Provide exactly one unique username per student, using 3–24 letters, numbers, underscores or hyphens.');
  const leaderToken=secret(),adminToken=secret(),examCode=code();
  const credentials=Array.from({length:capacity},(_,i)=>{
-   const username='student'+String(i+1).padStart(2,'0'),password=pin(),salt=randomBytes(16).toString('hex');
+   const username=requested[i]||'student'+String(i+1).padStart(2,'0'),password=pin(),salt=randomBytes(16).toString('hex');
    return {username,pin:password,salt,pin_hash:digest(salt+':'+password)};
  });
  // One atomic PostgreSQL query creates the room, roster and frozen shared question set.
