@@ -102,6 +102,22 @@ const TOPICS={
  [S.PSY]:[['Mood Disorders',/\b(?:depression|bipolar|mania)\b/i],['Psychotic Disorders',/\b(?:psychosis|schizophrenia|delusions|hallucinations)\b/i],['Anxiety and Trauma-related Disorders',/\b(?:anxiety|PTSD|panic|OCD)\b/i]],
  [S.DERM]:[['Inflammatory Skin Disorders',/\b(?:eczema|psoriasis|dermatitis|urticaria)\b/i],['Skin Infections',/\b(?:impetigo|cellulitis|fungal\s+skin)\b/i],['Skin Neoplasms',/\b(?:melanoma|skin\s+cancer)\b/i]]
 };
+// Supplement the initial taxonomy with the source-bank evidence from the
+// Oct 22 full-length audit; keep canonical names identical.
+TOPICS[S.ANATOMY].unshift(
+ ['Upper Limb',/\b(?:rotator cuff|radius and ulna|forearm|flexor tendons?|anatomical snuffbox|subclavian artery|axilla)\b/i],
+ ['Thorax',/\b(?:heart valves?|coronary veins?|conducting system of the heart|venous drainage of the heart)\b/i],
+ ['Head and Neck',/\b(?:cheek|facial muscles?|mandible|maxilla)\b/i]
+);
+TOPICS[S.PHARMA].unshift(
+ ['General Pharmacology',/\b(?:transdermal|hypodermic|drug salt|salt form of (?:the )?drug|route of administration|administered|pharmaceutical|drug formulation|drug absorption)\b/i]
+);
+TOPICS[S.EMBRYO].unshift(
+ ['Early Development',/\b(?:oocyte|fertili[sz]ation|sperm capacitation|trophoblast|amniotic cavity|first week of (?:human )?development|second week of development)\b/i]
+);
+TOPICS[S.PHYS].unshift(
+ ['Transport and Homeostasis',/\b(?:solute particles?|concentration gradient|sodium.potassium|Na\+\/K\+|ATPase pump|buffers?|permeable membrane)\b/i]
+);
 const badTopic=/^(?:Unassigned topic|Department review required|Unclassified|unknown|Miscellaneous|None|N\/A|Other)$/i;
 const TOPIC_ALIASES={
  [S.ANATOMY]:{
@@ -170,6 +186,37 @@ export function curateQuestion(question){
  if(subject===S.ANATOMY && !clearAnatomy && !explicitClinical && !drugFocus &&
     RX.parasite.test(focus) && !RX.anatAsk.test(full)){
     subject=S.PARA;reason='parasite_outside_anatomy';confidence='medium';review=true;
+ }
+ // Explicit full-bank corrections for imported cross-department documents.
+ const nonENTAnatomy=/\b(?:forearm|rotator cuff|radius and ulna|flexor tendons? of the forearm|axilla|thoracic vertebra|coronary veins?|venous drainage of the heart|valves of the heart|conducting system of the heart|subclavian artery)\b/i;
+ const entFocus=/\b(?:otitis|hearing|ear canal|tympanic|mastoid|sinusitis|nasal|larynx|pharynx|tonsil|epistaxis|middle ear|inner ear)\b/i;
+ if(subject===S.ENT&&!explicitClinical && nonENTAnatomy.test(full) && !entFocus.test(full)){
+  subject=S.ANATOMY;reason='non_ent_structural_question';confidence='high';review=false;
+ }
+ const neuralCellBiology=/\b(?:supporting cells in the central nervous system|peripheral nervous system|cell body of a neuron|type of neuron|neuron called|microglia|neuroglia|axon|dendrite|myelin sheath)\b/i;
+ if(subject===S.NEURO&&!explicitClinical && neuralCellBiology.test(actualQuestion)){
+  subject=S.ANATOMY;reason='neuroanatomy_mislabelled_neurology';confidence='medium';review=true;
+ }
+ if(subject===S.SURG&&!explicitClinical && /\b(?:worm|helminth|parasite)\b/i.test(full)&&
+    /\b(?:species|buccal cavity|larva|worm identification|parasitic)\b/i.test(actualQuestion)){
+  subject=S.PARA;reason='parasitology_mislabelled_surgery';confidence='high';review=false;
+ }
+ if(subject===S.SURG && /\b(?:termination of pregnancy|abortion|pregnancy termination)\b/i.test(actualQuestion)){
+  subject=S.OG;reason='obstetrics_mislabelled_surgery';confidence='high';review=false;
+ }
+ if(subject===S.PEDS && /\b(?:subjects you should consider as being vulnerable|ethics in research|informed consent in research)\b/i.test(actualQuestion)){
+  subject='Medical Ethics and Law';reason='research_ethics_mislabelled_pediatrics';confidence='high';review=false;
+ }
+ if(subject===UNRESOLVED_SUBJECT && !explicitClinical&&!drugFocus &&
+  /\b(?:aorta|capillaries|arterioles|venules|tunica media|vasa vasorum|nervi vascularis|portal system|microvascular bed|arterial elastic membrane)\b/i.test(actualQuestion)){
+   if(/\b(?:gas exchange|blood flow regulation|pressure|physiology)\b/i.test(actualQuestion)){
+      subject=S.PHYS;reason='vascular_physiology_in_unclassified';
+   }else if(/\b(?:tissue lines|epithelial|cell type|microscopic|elastic membrane)\b/i.test(actualQuestion)){
+      subject=S.HIST;reason='vascular_histology_in_unclassified';
+   }else{
+      subject=S.ANATOMY;reason='vascular_anatomy_in_unclassified';
+   }
+   confidence='medium';review=true;
  }
  if(subject===S.PHARMA&&!drugFocus && !explicitClinical &&
     strongMatch(RX.biochemistry,full,focus) && !RX.pharm.test(full) && !RX.pharmRequest.test(full)){
