@@ -30,6 +30,14 @@ jobs:
           name: medarc-question-bank-quality
           path: reports/question-bank-quality.json
           if-no-files-found: error
+      - name: Audit source subject routing by discipline
+        run: node scripts/audit-subject-mapping.mjs
+      - name: Upload department mapping and subject-review queue
+        uses: actions/upload-artifact@v4
+        with:
+          name: medarc-department-audit
+          path: reports/department-routing.json
+          if-no-files-found: error
       - name: Compile production Next.js application
         run: npm run build
       - name: Scan production dependencies for security advisories

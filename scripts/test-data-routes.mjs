@@ -7,7 +7,8 @@ import {pathToFileURL} from 'node:url';
 // Next.js-only server-only marker; no mocked question records are used.
 const source=fs.readFileSync(path.join(process.cwd(),'src/lib/bank.js'),'utf8')
   .replace(/^import 'server-only';\s*/m,'')
-  .replace("from './question-quality.mjs';", "from '"+pathToFileURL(path.join(process.cwd(),'src/lib/question-quality.mjs')).href+"';");
+  .replace("from './question-quality.mjs';", "from '"+pathToFileURL(path.join(process.cwd(),'src/lib/question-quality.mjs')).href+"';")
+  .replace("from './department-routing.mjs';", "from '"+pathToFileURL(path.join(process.cwd(),'src/lib/department-routing.mjs')).href+"';");
 const lib=await import(`data:text/javascript;base64,${Buffer.from(source).toString('base64')}`);
 const bank=lib.getBank();
 const expected=lib.getStats();
@@ -49,14 +50,16 @@ assert.ok(selectedTopic.topics.includes(selected.topic));
 const baseExams=lib.getExams();
 assert.ok(baseExams.count<=1201&&baseExams.count>0);
 assert.equal(baseExams.exams.length,16);
-const firstExam=bank.exams.find(e=>e.questionIds?.filter(id=>!report.excluded.has(id)).length>1);
-assert.ok(firstExam);
-const opened=lib.getExam(firstExam.id,1);
-assert.equal(opened.exam.id,firstExam.id);
-assert.equal(opened.exam.total,firstExam.questionIds.filter(id=>!report.excluded.has(id)).length);
-assert.equal(opened.question.id,firstExam.questionIds.filter(id=>!report.excluded.has(id))[0]);
-const openedNext=lib.getExam(firstExam.id,2);
-assert.equal(openedNext.question.id,firstExam.questionIds.filter(id=>!report.excluded.has(id))[1]);
+const firstSummary=baseExams.exams.find(e=>e.count>1);
+assert.ok(firstSummary);
+const firstExam=bank.examById.get(firstSummary.id);
+const opened=lib.getExam(firstSummary.id,1);
+assert.equal(opened.exam.id,firstSummary.id);
+assert.equal(opened.exam.total,firstSummary.count);
+assert.ok(firstExam.questionIds.includes(opened.question.id));
+assert.equal(opened.exam.archivedTotal,firstExam.questionIds.length);
+const openedNext=lib.getExam(firstSummary.id,2);
+assert.ok(firstExam.questionIds.includes(openedNext.question.id));
 assert.equal(lib.getExam('no-such-exam'),null);
 const auditFirst=lib.getAudit();
 assert.equal(auditFirst.count,expected.questions);

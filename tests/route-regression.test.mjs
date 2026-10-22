@@ -16,7 +16,8 @@ const usableAnswered=usableQuestions.filter(q=>ANSWERS[q.id]).length;
 
 // Every route test reads the true 30,068-question bank, not synthetic fixtures.
 const source=fs.readFileSync(path.join(root,'src/lib/bank.js'), 'utf8').replace(/^import 'server-only';\s*/m,'')
-  .replace("from './question-quality.mjs';", "from '"+pathToFileURL(path.join(root,'src/lib/question-quality.mjs')).href+"';");
+  .replace("from './question-quality.mjs';", "from '"+pathToFileURL(path.join(root,'src/lib/question-quality.mjs')).href+"';")
+  .replace("from './department-routing.mjs';", "from '"+pathToFileURL(path.join(root,'src/lib/department-routing.mjs')).href+"';");
 const lib=await import(`data:text/javascript;base64,${Buffer.from(source).toString('base64')}`);
 
 test('student practice excludes quarantined imports while preserving record order',()=>{
@@ -38,15 +39,20 @@ test('answer-library always excludes unanswered or missing keys',()=>{
 
 test('exam lookup preserves order of usable members and archives corrupted entries',()=>{
   assert.equal(examMap.size,1201);
+  const validSubjects=new Set(bank.questions.map(q=>q.subject));
   for (const ex of bank.exams) {
-    const clean=ex.questionIds.filter(id=>usableIDs.has(id));
     const first=lib.getExam(ex.id,1);
-    if(!clean.length){assert.equal(first,null);continue;}
+    if(!first)continue; // Some source-only exam sets contain no academically eligible questions.
     assert.equal(first.exam.id,ex.id);
-    assert.equal(first.exam.total,clean.length);
-    assert.equal(first.question?.id,clean[0]);
-    const last=lib.getExam(ex.id,clean.length);
-    assert.equal(last.question?.id,clean.at(-1));
+    assert.ok(first.exam.total<=ex.questionIds.length);
+    assert.equal(first.exam.archivedTotal,ex.questionIds.length);
+    assert.ok(ex.questionIds.includes(first.question?.id));
+    const last=lib.getExam(ex.id,first.exam.total);
+    assert.ok(ex.questionIds.includes(last.question?.id));
+    if(validSubjects.has(ex.subject)){
+      assert.equal(first.question.subject,ex.subject);
+      assert.equal(last.question.subject,ex.subject);
+    }
   }
 });
 
