@@ -2,7 +2,8 @@ import 'server-only';
 import fs from 'node:fs';
 import path from 'node:path';
 import {assessQuestionQuality} from './question-quality.mjs';
-import {resolveQuestionDepartment,isClinicalManagementQuestion} from './department-routing.mjs';
+import {isClinicalManagementQuestion} from './department-routing.mjs';
+import {curateQuestion,duplicateKey} from './question-curation.mjs';
 
 let memo;
 export function getBank() {
@@ -12,27 +13,46 @@ export function getBank() {
     memo.questionById = new Map(memo.questions.map(q => [q.id, q]));
     memo.examById = new Map(memo.exams.map(x => [x.id, x]));
     memo.departmentById=new Map();
-    const counts={},reasonCounts={},samples={};let moved=0,review=0,anatomyLeaks=0;
+    memo.duplicateOf=new Map();
+    const counts={},reasonCounts={},samples={};let moved=0,review=0,anatomyLeaks=0,topicResolved=0;
     for(const q of memo.questions){
-      const resolution=resolveQuestionDepartment(q);
-      memo.departmentById.set(q.id,resolution);
-      counts[resolution.subject]=(counts[resolution.subject]||0)+1;
-      if(resolution.reassigned){
+      const res=curateQuestion(q);
+      memo.departmentById.set(q.id,res);
+      counts[res.subject]=(counts[res.subject]||0)+1;
+      if(res.topic!=='Topic review required')topicResolved++;
+      if(res.reassigned){
         moved++;
-        reasonCounts[resolution.reason]=(reasonCounts[resolution.reason]||0)+1;
-        if(!samples[resolution.reason])samples[resolution.reason]=[];
-        if(samples[resolution.reason].length<12)samples[resolution.reason].push({id:q.id,from:resolution.sourceSubject,to:resolution.subject,stem:String(q.stem||'').slice(0,170)});
+        reasonCounts[res.reason]=(reasonCounts[res.reason]||0)+1;
+        if(!samples[res.reason])samples[res.reason]=[];
+        if(samples[res.reason].length<12)samples[res.reason].push({id:q.id,from:res.sourceSubject,to:res.subject,topic:res.topic});
       }
-      if(resolution.review)review++;
-      if(resolution.subject==='Human Anatomy'&&isClinicalManagementQuestion(q))anatomyLeaks++;
+      if(res.review)review++;
+      if(res.subject==='Human Anatomy'&&isClinicalManagementQuestion(q))anatomyLeaks++;
     }
     if(anatomyLeaks)throw new Error('Clinical management question leaked into Anatomy department');
-    memo.departmentReport={total:memo.questions.length,reassigned:moved,needsDepartmentReview:review,reasonCounts,samples,anatomyManagementLeaks:anatomyLeaks};
-    memo.sourceSubjectCounts=Object.entries(memo.questions.reduce((a,q)=>{
-      const label=q.subject||'Unclassified Health Sciences';a[label]=(a[label]||0)+1;return a;
+    const canonical=new Map();
+    for(const q of memo.questions){
+      if(assessQuestionQuality(q).status==='quarantined')continue;
+      const d=memo.departmentById.get(q.id),key=duplicateKey(q);
+      if(!key)continue;
+      const fullKey=d.subject+'|'+key,prev=canonical.get(fullKey);
+      if(prev){
+        if(!memo.answers?.[prev] && memo.answers?.[q.id]){
+          memo.duplicateOf.set(prev,q.id);
+          canonical.set(fullKey,q.id);
+        }else memo.duplicateOf.set(q.id,prev);
+      }else canonical.set(fullKey,q.id);
+    }
+    memo.departmentReport={total:memo.questions.length,reassigned:moved,
+      needsDepartmentReview:review,topicsCategorized:topicResolved,
+      topicsAwaitingReview:memo.questions.length-topicResolved,
+      exactDuplicateRecords:memo.duplicateOf.size,
+      reasonCounts,samples,anatomyManagementLeaks:anatomyLeaks};
+    memo.sourceSubjectCounts=Object.entries(memo.questions.reduce((obj,q)=>{
+      const label=q.subject||'Unclassified Health Sciences';obj[label]=(obj[label]||0)+1;return obj;
     },{}));
-    memo.subjectCounts=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
-    memo.subjects = memo.subjectCounts.map(([name]) => name);
+    memo.subjectCounts=Object.entries(counts).sort((x,y)=>y[1]-x[1]);
+    memo.subjects=memo.subjectCounts.map(([name])=>name);
     memo.examSubjects = [...new Set(memo.exams.map(e=>e.subject).filter(Boolean))].sort();
     memo.types = [...new Set(memo.questions.map(q=>q.type).filter(Boolean))].sort();
   }
@@ -97,7 +117,7 @@ export function getQuestions(params = {}, answeredOnly = false, subjectLock = ''
   const limit = 10;
   const matched=[];
   for (const q of b.questions) {
-    if(excluded.has(q.id))continue;
+    if(excluded.has(q.id)||b.duplicateOf.has(q.id))continue;
     const hasAnswer=Boolean(b.answers[q.id]);
     if (malformedLearningRecord(q)) continue;
     if (answeredOnly && !hasAnswer) continue;
@@ -125,7 +145,7 @@ export function getQuestions(params = {}, answeredOnly = false, subjectLock = ''
   });
   let topics=[];
   if(subject) topics=[...new Set(b.questions.filter(q=>
-    !excluded.has(q.id)&&departmentById.get(q.id).subject===subject
+    !excluded.has(q.id)&&!b.duplicateOf.has(q.id)&&departmentById.get(q.id).subject===subject
   ).map(q=>departmentById.get(q.id).topic).filter(Boolean))].sort().slice(0,300);
   return {questions,count,page:safePage,pages,topics,limit,params:{subject,topic,type,search,status}};
 }
@@ -138,6 +158,7 @@ function examMemberships(exam,bank) {
   return (exam.questionIds||[]).filter(id=>
     bank.questionById.has(id) &&
     !excluded.has(id) &&
+    !bank.duplicateOf.has(id) &&
     !malformedLearningRecord(bank.questionById.get(id)) &&
     (!lockedSubject || bank.departmentById.get(id).subject===lockedSubject)
   );
@@ -160,13 +181,36 @@ export function getExam(id,position=1) {
 }
 export function getAudit(pageRaw=1) {
   const b=getBank();const page=intParam(pageRaw);const limit=25;const pages=Math.ceil(b.questions.length/limit);
-  return {count:b.questions.length,page:Math.min(page,pages),pages,rows:b.questions.slice((Math.min(page,pages)-1)*limit,Math.min(page,pages)*limit).map(q=>({id:q.id,subject:b.departmentById.get(q.id).subject,sourceSubject:q.subject,topic:b.departmentById.get(q.id).topic,departmentReason:b.departmentById.get(q.id).reason,departmentReview:b.departmentById.get(q.id).review,status:q.answerAuditStatus||q.status,answered:!!b.answers[q.id],quality:assessQuestionQuality(q).status,qualityReasons:assessQuestionQuality(q).reasons,flags:q.auditFlags||[]}))};
+  return {count:b.questions.length,page:Math.min(page,pages),pages,rows:b.questions.slice((Math.min(page,pages)-1)*limit,Math.min(page,pages)*limit).map(q=>({id:q.id,subject:b.departmentById.get(q.id).subject,sourceSubject:q.subject,topic:b.departmentById.get(q.id).topic,departmentReason:b.departmentById.get(q.id).reason,departmentReview:b.departmentById.get(q.id).review,duplicateOf:b.duplicateOf.get(q.id)||null,topicReason:b.departmentById.get(q.id).topicReason,status:q.answerAuditStatus||q.status,answered:!!b.answers[q.id],quality:assessQuestionQuality(q).status,qualityReasons:assessQuestionQuality(q).reasons,flags:q.auditFlags||[]}))};
+}
+/** Curated subject → topic listings, excluding quarantined and repeated records. */
+export function getSubjectTopics(subject){
+  const b=getBank(),target=stringParam(subject);
+  if(!b.subjects.includes(target))return null;
+  const excluded=getQuestionQualityReport().excluded,topics=new Map();
+  let count=0,review=0;
+  for(const q of b.questions){
+    if(excluded.has(q.id)||b.duplicateOf.has(q.id))continue;
+    const d=b.departmentById.get(q.id);
+    if(d.subject!==target)continue;
+    count++;if(d.review)review++;
+    if(!topics.has(d.topic))topics.set(d.topic,{name:d.topic,count:0,review:0});
+    const x=topics.get(d.topic);x.count++;if(d.review)x.review++;
+  }
+  return {subject:target,count,review,
+    topics:[...topics.values()].sort((a,b)=>a.name==='Topic review required'?1:b.name==='Topic review required'?-1:b.count-a.count||a.name.localeCompare(b.name))};
 }
 export function getTopicGroups(){
   const b=getBank();
   const basicHints=['anatomy','physiology','biochemistry','parasitology','microbiology','pharmacology','pathology','hematology','histology','embryology','immunology','medical genetics','nutrition','biostatistics','epidemiology','community','development'];
   const clinicalHints=['medicine','surgery','obstetrics','gynecology','pediatrics','neurology','psychiatry','dermatology','orthopedics','ophthalmology','ent','radiography','anesthesiology','emergency','clinical','nursing'];
   const groups={basic:[],clinical:[],other:[]};
-  for(const [name,count] of b.subjectCounts){const low=name.toLowerCase();if(basicHints.some(x=>low.includes(x)))groups.basic.push({name,count});else if(clinicalHints.some(x=>low.includes(x)))groups.clinical.push({name,count});else groups.other.push({name,count});}
+  const counts=new Map(),excluded=getQuestionQualityReport().excluded;
+  for(const q of b.questions){
+    if(excluded.has(q.id)||b.duplicateOf.has(q.id))continue;
+    const subject=b.departmentById.get(q.id).subject;
+    counts.set(subject,(counts.get(subject)||0)+1);
+  }
+  for(const [name,count] of [...counts].sort((a,b)=>b[1]-a[1])){if(typeof name!=='string'||!name.trim())continue;const low=name.toLowerCase();if(basicHints.some(x=>low.includes(x)))groups.basic.push({name,count});else if(clinicalHints.some(x=>low.includes(x)))groups.clinical.push({name,count});else groups.other.push({name,count});}
   return groups;
 }

@@ -29,9 +29,9 @@ function availableQuestions(subject,topic,mode){
  const uniqueStems=new Set();
  return bank.questions.filter(q=>{
   const d=bank.departmentById.get(q.id);
-  if(excluded.has(q.id)||assessQuestionQuality(q).status!=='usable'||d.review||
+  if(excluded.has(q.id)||bank.duplicateOf.has(q.id)||assessQuestionQuality(q).status!=='usable'||d.review||
      d.subject!==subject||d.subject==='Unclassified Health Sciences'||
-     !d.topic||/^(Unassigned topic|Department review required)$/i.test(d.topic)||
+     !d.topic||/^(Unassigned topic|Department review required|Topic review required)$/i.test(d.topic)||
      (topic&&d.topic!==topic)||q.options?.length<2||(mode==='scored'&&!reviewed(q)))return false;
   const normalized=String(q.stem||'').replace(/\s+/g,' ').trim().toLowerCase();
   if(uniqueStems.has(normalized))return false;
@@ -43,9 +43,9 @@ export function groupExamSubjects(){
  const bank=getBank(),excluded=getQuestionQualityReport().excluded;
  const groups=new Map();
  for(const q of bank.questions){
-  if(excluded.has(q.id)||assessQuestionQuality(q).status!=='usable'||q.options?.length<2)continue;
+  if(excluded.has(q.id)||bank.duplicateOf.has(q.id)||assessQuestionQuality(q).status!=='usable'||q.options?.length<2)continue;
   const d=bank.departmentById.get(q.id);
-  if(d.review||d.subject==='Unclassified Health Sciences'||!d.topic||/^(Unassigned topic|Department review required)$/i.test(d.topic))continue;
+  if(d.review||d.subject==='Unclassified Health Sciences'||!d.topic||/^(Unassigned topic|Department review required|Topic review required)$/i.test(d.topic))continue;
   if(!groups.has(d.subject))groups.set(d.subject,{subject:d.subject,count:0,topics:new Set()});
   const g=groups.get(d.subject);g.count++;if(d.topic)g.topics.add(d.topic);
  }

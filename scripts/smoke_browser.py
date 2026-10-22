@@ -16,7 +16,7 @@ from pathlib import Path
 from playwright.async_api import async_playwright
 
 BASE=(sys.argv[1] if len(sys.argv)>1 else 'http://localhost:3000').rstrip('/')
-ROUTES=['/','/topics','/practice','/answers','/exams','/anatomy','/review','/visual-learning','/group-exams']
+ROUTES=['/','/topics','/topics/Human%20Anatomy','/practice','/answers','/exams','/anatomy','/review','/visual-learning','/group-exams']
 VIEWPORTS=[{'width':390,'height':844}, {'width':768,'height':1024}, {'width':1440,'height':960}]
 
 async def assert_route(page, route):
@@ -46,6 +46,17 @@ async def check_uploaded_visuals(page):
     await first.scroll_into_view_if_needed()
     await first.evaluate('(img) => img.decode()')
     assert await first.evaluate('(img) => img.naturalWidth>0'),'Visual gallery asset not loaded'
+
+async def check_subject_taxonomy(page):
+    await page.goto(BASE+'/topics',wait_until='domcontentloaded')
+    anatomy=page.locator('a.topic-card[href*="/topics/Human%20Anatomy"]')
+    assert await anatomy.count(),'Human Anatomy subject drill-down link missing'
+    await anatomy.first.click()
+    await page.wait_for_url('**/topics/Human%20Anatomy')
+    assert await page.locator('.topic-card').count()>=1,'Anatomy subtopic cards missing'
+    for link in await page.locator('a.topic-card').all():
+        href=await link.get_attribute('href')
+        assert 'practice?subject=Human%20Anatomy' in href,'Topic card routed outside its discipline: '+str(href)
 
 async def check_search(page):
     await page.goto(BASE,wait_until='domcontentloaded')
@@ -139,6 +150,7 @@ async def main():
             for route in ROUTES:
                 await assert_route(page,route)
                 print('PASS',viewport['width'],route)
+            await check_subject_taxonomy(page)
             await check_uploaded_visuals(page)
             await check_search(page)
             await check_exam(page)

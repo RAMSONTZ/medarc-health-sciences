@@ -10,15 +10,19 @@ const qmap=new Map(bank.questions.map(q=>[q.id,q]));
 const examMap=new Map(bank.exams.map(e=>[e.id,e]));
 const ANSWERS=bank.answers||{};
 const {assessQuestionQuality}=await import(pathToFileURL(path.join(root,'src/lib/question-quality.mjs')));
-const usableQuestions=bank.questions.filter(q=>assessQuestionQuality(q).status!=='quarantined');
-const usableIDs=new Set(usableQuestions.map(q=>q.id));
-const usableAnswered=usableQuestions.filter(q=>ANSWERS[q.id]).length;
+let usableQuestions;
+let usableIDs;
+let usableAnswered;
 
 // Every route test reads the true 30,068-question bank, not synthetic fixtures.
 const source=fs.readFileSync(path.join(root,'src/lib/bank.js'), 'utf8').replace(/^import 'server-only';\s*/m,'')
   .replace("from './question-quality.mjs';", "from '"+pathToFileURL(path.join(root,'src/lib/question-quality.mjs')).href+"';")
-  .replace("from './department-routing.mjs';", "from '"+pathToFileURL(path.join(root,'src/lib/department-routing.mjs')).href+"';");
+  .replace("from './department-routing.mjs';", "from '"+pathToFileURL(path.join(root,'src/lib/department-routing.mjs')).href+"';")
+  .replace("from './question-curation.mjs';", "from '"+pathToFileURL(path.join(root,'src/lib/question-curation.mjs')).href+"';");
 const lib=await import(`data:text/javascript;base64,${Buffer.from(source).toString('base64')}`);
+usableQuestions=bank.questions.filter(q=>assessQuestionQuality(q).status!=='quarantined'&&!lib.getBank().duplicateOf.has(q.id));
+usableIDs=new Set(usableQuestions.map(q=>q.id));
+usableAnswered=usableQuestions.filter(q=>ANSWERS[q.id]).length;
 
 test('student practice excludes quarantined imports while preserving record order',()=>{
   assert.equal(lib.getQuestions().questions[0].id,usableQuestions[0].id);

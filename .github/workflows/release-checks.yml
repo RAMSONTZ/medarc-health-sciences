@@ -38,6 +38,24 @@ jobs:
           name: medarc-department-audit
           path: reports/department-routing.json
           if-no-files-found: error
+      - name: Profile and audit all 30,068 question records
+        run: node scripts/profile-full-question-bank.mjs
+      - name: Upload full-bank baseline profile
+        uses: actions/upload-artifact@v4
+        with:
+          name: medarc-full-bank-baseline
+          path: reports/full-bank-baseline.json
+          if-no-files-found: error
+      - name: Export question-level curation decisions for all original records
+        run: node scripts/export-curation-ledger.mjs
+      - name: Upload complete MedArc curation ledger and review queue
+        uses: actions/upload-artifact@v4
+        with:
+          name: medarc-30068-question-curation
+          path: |
+            reports/question-curation-ledger.csv
+            reports/question-curation-summary.json
+          if-no-files-found: error
       - name: Compile production Next.js application
         run: npm run build
       - name: Scan production dependencies for security advisories
