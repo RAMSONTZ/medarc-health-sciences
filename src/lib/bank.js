@@ -183,6 +183,23 @@ export function getAudit(pageRaw=1) {
   const b=getBank();const page=intParam(pageRaw);const limit=25;const pages=Math.ceil(b.questions.length/limit);
   return {count:b.questions.length,page:Math.min(page,pages),pages,rows:b.questions.slice((Math.min(page,pages)-1)*limit,Math.min(page,pages)*limit).map(q=>({id:q.id,subject:b.departmentById.get(q.id).subject,sourceSubject:q.subject,topic:b.departmentById.get(q.id).topic,departmentReason:b.departmentById.get(q.id).reason,departmentReview:b.departmentById.get(q.id).review,duplicateOf:b.duplicateOf.get(q.id)||null,topicReason:b.departmentById.get(q.id).topicReason,status:q.answerAuditStatus||q.status,answered:!!b.answers[q.id],quality:assessQuestionQuality(q).status,qualityReasons:assessQuestionQuality(q).reasons,flags:q.auditFlags||[]}))};
 }
+/** Curated subject → topic listings, excluding quarantined and repeated records. */
+export function getSubjectTopics(subject){
+  const b=getBank(),target=stringParam(subject);
+  if(!b.subjects.includes(target))return null;
+  const excluded=getQuestionQualityReport().excluded,topics=new Map();
+  let count=0,review=0;
+  for(const q of b.questions){
+    if(excluded.has(q.id)||b.duplicateOf.has(q.id))continue;
+    const d=b.departmentById.get(q.id);
+    if(d.subject!==target)continue;
+    count++;if(d.review)review++;
+    if(!topics.has(d.topic))topics.set(d.topic,{name:d.topic,count:0,review:0});
+    const x=topics.get(d.topic);x.count++;if(d.review)x.review++;
+  }
+  return {subject:target,count,review,
+    topics:[...topics.values()].sort((a,b)=>a.name==='Topic review required'?1:b.name==='Topic review required'?-1:b.count-a.count||a.name.localeCompare(b.name))};
+}
 export function getTopicGroups(){
   const b=getBank();
   const basicHints=['anatomy','physiology','biochemistry','parasitology','microbiology','pharmacology','pathology','hematology','histology','embryology','immunology','medical genetics','nutrition','biostatistics','epidemiology','community','development'];
