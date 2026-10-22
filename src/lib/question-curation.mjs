@@ -237,7 +237,7 @@ export function curateQuestion(question){
  let topic='';
  let topicReason='academic_taxonomy';
  const matches=TOPICS[subject]||[];
- const hits=matches.filter(([,pattern])=>pattern.test(actualQuestion));
+ const hits=[...new Map(matches.filter(([,pattern])=>pattern.test(actualQuestion)).map(pair=>[pair[0],pair])).values()];
  if(hits.length===1){topic=hits[0][0];}
  else if(hits.length>1){
    const hinted=(TOPIC_ALIASES[subject]||{})[original]||original;
@@ -248,7 +248,7 @@ export function curateQuestion(question){
  // When the isolated question contains no recognizable topic clues,
  // inspect context. Multiple disease signals are review-only.
  if(!topic && matches.length && full!==actualQuestion){
-   const whole=matches.filter(([,pattern])=>pattern.test(full));
+   const whole=[...new Map(matches.filter(([,pattern])=>pattern.test(full)).map(pair=>[pair[0],pair])).values()];
    if(whole.length===1){topic=whole[0][0];topicReason='context_topic_evidence';}
    else if(whole.length>1){
      const hinted=(TOPIC_ALIASES[subject]||{})[original]||original;
