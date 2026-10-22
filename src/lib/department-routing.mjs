@@ -97,6 +97,9 @@ export function resolveQuestionDepartment(question){
   subject=target;reason='clinical_case_mislabelled_anatomy';
  } else if(source===ANATOMY && !anatomical && RX.immunology.test(stem)){
   subject='Immunology';reason='immunology_content_mislabelled_anatomy';
+ } else if(source===ANATOMY && !anatomical && !pharm && !RX.immunology.test(stem) &&
+  stem.length>160 && /\b(?:patient|presents|hospitalized|clinical case|physician)\b/i.test(stem)){
+  subject=UNRESOLVED_SUBJECT;review=true;reason='unresolved_nonanatomical_vignette';
  } else if(foundational.has(source) && clinical && source!==ANATOMY){
   if(pharm && source!==PHYSIO){subject=PHARMA;reason='pharmacology_mislabelled_foundational';}
   else if(target){subject=target;reason='clinical_management_mislabelled_foundational';}
