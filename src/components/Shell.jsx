@@ -9,10 +9,8 @@ const sections=[
  {href:'/',label:'Overview',icon:'home'},
  {href:'/topics',label:'Explore subjects',icon:'grid'},
  {href:'/practice',label:'Question practice',icon:'book'},
- {href:'/answers',label:'Answers + explanations',icon:'check'},
  {href:'/exams',label:'Exam collections',icon:'clipboard'},
- {href:'/anatomy',label:'Anatomy lab',icon:'layers'},
- {href:'/review',label:'Quality audit',icon:'chart'}
+ {href:'/anatomy',label:'Anatomy lab',icon:'layers'}
 ];
 const localKey='medarc:v2:profile';
 function isActive(path,href){return href==='/'?path==='/':path.startsWith(href)}
@@ -25,17 +23,17 @@ export function Shell({children}){
  useEffect(()=>{const setting=localStorage.getItem('medarc:display-theme');const chosen=setting==='dark'?'dark':setting==='light'?'light':(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');setTheme(chosen);document.documentElement.dataset.theme=chosen;},[]);
  const toggleTheme=()=>{const chosen=theme==='dark'?'light':'dark';setTheme(chosen);document.documentElement.dataset.theme=chosen;try{localStorage.setItem('medarc:display-theme',chosen)}catch{}};
 
- const nav=<nav className="nav-list" aria-label="Main navigation">{sections.map(item=><Link key={item.href} className={`nav-link ${isActive(path,item.href)?'is-active':''}`} href={item.href} onClick={()=>setDrawer(false)}><Icon name={item.icon} size={19}/><span>{item.label}</span>{isActive(path,item.href)&&<span className="nav-indicator"/>}</Link>)}</nav>;
+ const nav=<nav className="nav-list" aria-label="Main navigation">{sections.map(item=><Link key={item.href} className={`nav-link ${isActive(path,item.href)?'is-active':''}`} href={item.href} title={item.label} onClick={()=>setDrawer(false)}><Icon name={item.icon} size={19}/><span>{item.label}</span>{isActive(path,item.href)&&<span className="nav-indicator"/>}</Link>)}</nav>;
  return <div className="app-shell">
   <aside className={`sidebar ${drawer?'sidebar-open':''}`} aria-label="Site menu">
    <div className="sidebar-header"><Logo/><button className="icon-only close-side" onClick={()=>setDrawer(false)} aria-label="Close menu"><Icon name="x"/></button></div>
    <div className="sidebar-section-caption">YOUR WORKSPACE</div>{nav}
-   <div className="sidebar-lower"><div className="sidebar-photo" role="img" aria-label="Healthcare professional in a hospital"><div><span className="tiny-overline">BUILT FOR THE CLINICAL MIND</span><b>Learn deeply.<br/>Think clearly.</b><Link href="/topics">Explore subjects <Icon name="arrow" size={15}/></Link></div></div><div className="sidebar-note"><Icon name="shield" size={17}/> Prepared answers are provisional until reviewed.</div></div>
+   <div className="sidebar-lower"><div className="sidebar-photo" role="img" aria-label="Healthcare professional in a hospital"><div><span className="tiny-overline">BUILT FOR THE CLINICAL MIND</span><b>Learn deeply.<br/>Think clearly.</b><Link href="/topics">Explore subjects <Icon name="arrow" size={15}/></Link></div></div><div className="sidebar-note"><Icon name="shield" size={17}/> All clinical answer mappings remain provisional until reviewed.</div></div>
   </aside>
   {drawer&&<button className="mobile-scrim" aria-label="Close navigation" onClick={()=>setDrawer(false)}/>}
   <div className="main-column"><header className="topbar"><div className="topbar-left"><button className="icon-only menu-toggle" onClick={()=>setDrawer(true)} aria-label="Open navigation"><Icon name="menu"/></button><span className="topbar-location">MedArc <Icon name="chevron" size={14}/> <span>{sections.find(item=>isActive(path,item.href))?.label||'Learning'}</span></span></div>
    <SmartSearch onNavigate={()=>setDrawer(false)}/>
-   <div className="topbar-actions"><button type="button" className="theme-switch" onClick={toggleTheme} aria-label={`Switch to ${theme==='dark'?'light':'dark'} theme`} title={`${theme==='dark'?'Light':'Dark'} theme`}>{theme==='dark'?'☼':'☾'}</button><button className="icon-only mobile-search-button" onClick={()=>setMobileSearch(x=>!x)} aria-label="Search MedArc"><Icon name="search" size={19}/></button><Link className="topbar-link" href="/topics">All topics <Icon name="chevron" size={16}/></Link><button className="profile-chip" onClick={()=>window.dispatchEvent(new Event('medarc:open-profile'))} title="Personalize your learning"><span>{(profile?.name||'M').slice(0,1).toUpperCase()}</span><span className="profile-label">{profile?.name||'Your profile'}</span></button></div>
+   <div className="topbar-actions"><button type="button" className="theme-switch" onClick={toggleTheme} aria-label={`Switch to ${theme==='dark'?'light':'dark'} theme`} title={`${theme==='dark'?'Light':'Dark'} theme`}>{theme==='dark'?'☼':'☾'}</button><button className="icon-only mobile-search-button" onClick={()=>setMobileSearch(x=>!x)} aria-label="Search MedArc"><Icon name="search" size={19}/></button><button className="profile-chip" onClick={()=>window.dispatchEvent(new Event('medarc:open-profile'))} title="Personalize your learning"><span>{(profile?.name||'M').slice(0,1).toUpperCase()}</span><span className="profile-label">{profile?.name||'Your profile'}</span></button></div>
   {mobileSearch&&<div className="mobile-search-popover"><SmartSearch onNavigate={()=>setMobileSearch(false)}/></div>}
   </header><main className="page-container">{children}</main><footer className="site-footer"><span>© MedArc Health Sciences · Version 2</span><span>Educational reference · Content verification in progress</span></footer></div>
   <nav className="mobile-tabs" aria-label="Mobile navigation">{[sections[0],sections[2],sections[1],sections[4]].map(item=><Link key={item.href} className={isActive(path,item.href)?'selected':''} href={item.href}><Icon name={item.icon} size={20}/><small>{item.label.replace('Question ','').replace('Exam collections','Exams').replace('Explore subjects','Topics')}</small></Link>)}</nav>
