@@ -23,10 +23,12 @@ async function run(){
  assert.ok(entry,'No discipline with 10 usable questions');
  const created=await post('/api/group-exams',{
   title:'Automated Group Room QA',
-  subject:entry.subject,topic:'',capacity:5,questionCount:10,duration:20,mode:'practice'
+  subject:entry.subject,topic:'',capacity:5,questionCount:10,duration:20,mode:'practice',
+  usernames:['medic01','medic02','medic03','medic04','medic05']
  });
  assert.ok(created.code&&created.adminToken&&created.leaderToken);
  assert.equal(created.credentials.length,5);
+ assert.deepEqual(created.credentials.map(x=>x.username),['medic01','medic02','medic03','medic04','medic05']);
  const endpoint='/api/group-exams/'+created.code;
  const before=await fetchJson(endpoint);
  assert.equal(before.status,'lobby');
