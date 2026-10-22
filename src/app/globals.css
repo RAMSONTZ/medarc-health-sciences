@@ -258,3 +258,28 @@ html[data-theme='dark'] .ap-stage-actions select{background:var(--paper);color:v
 @media(min-width:1500px){.mva-regions{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:1100px){.mva-regions{grid-template-columns:1fr 1fr}.mva-region{grid-template-columns:1fr;min-height:0}.mva-region-photo img{height:180px;min-height:0}.mva-study{grid-template-columns:1fr}.mva-topics,.mva-pictures{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:680px){.mva{padding:16px}.mva-heading{display:block}.mva-count{display:inline-block;margin-top:13px}.mva-regions{grid-template-columns:1fr}.mva-region{grid-template-columns:40% 60%;min-height:155px}.mva-region-photo img{height:100%;min-height:155px}.mva-region-text{padding:13px}.mva-region-text h3{font-size:16px;margin:7px 0}.mva-region-text p{font-size:11px}.mva-region-text strong{margin-top:10px}.mva-topics,.mva-pictures{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.mva-topic>img,.mva-picture-frame{height:130px}.mva-topic>div,.mva-picture-description{padding:12px}.mva-topic h3,.mva-picture-description h3{font-size:12px}.mva-section-title{align-items:start}.mva-back{padding:8px;font-size:11px}.mva-study-image{min-height:220px}.mva-assessment{padding:15px}.mva-supplement-body{padding:10px}}
+
+
+/* Private encrypted anatomy atlas: on-device specimen browsing */
+.anatomy-private-workspace{margin-top:18px}
+.anatomy-private-vault{display:flex;flex-wrap:wrap;gap:10px;align-items:center;border:1px solid var(--line);background:var(--mist);border-radius:11px;padding:13px 15px;margin:14px 0}
+.anatomy-private-vault>div{flex:1 1 220px;min-width:0}
+.anatomy-private-vault b,.anatomy-private-vault small{display:block}
+.anatomy-private-vault b{font-size:12px;color:var(--ink)}
+.anatomy-private-vault small{font-size:11px;line-height:1.5;margin-top:4px;color:var(--muted)}
+.anatomy-private-vault input{min-width:170px;flex:1 1 220px;max-width:300px;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:8px;padding:11px;font-size:12px}
+.anatomy-private-vault button{border:0;border-radius:8px;padding:11px 13px;font-size:12px;color:white;background:var(--blue);font-weight:800}
+.anatomy-private-vault button.anatomy-private-delete{background:transparent;border:1px solid var(--line);color:var(--muted)}
+.anatomy-private-detail{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(245px,.65fr);gap:15px;margin:17px 0 25px;border:1px solid var(--line);border-radius:11px;padding:12px;scroll-margin-top:80px}
+.anatomy-private-full{background:#edf1f5;display:grid;place-items:center;border-radius:8px;min-height:300px;overflow:hidden}
+.anatomy-private-full img{display:block;object-fit:contain;width:100%;height:auto;max-height:650px}
+.anatomy-private-full.anatomy-device-dark{background:#14253a}
+html[data-theme='dark'] .anatomy-private-full.anatomy-device-auto{background:#14253a}
+.anatomy-private-detail-panel{display:flex;flex-direction:column;align-items:start;gap:11px;padding:12px}
+.anatomy-private-detail-panel h3{font:800 18px/1.35 var(--font-heading);color:var(--ink);margin:0}
+.anatomy-private-detail-panel p{color:var(--muted);font-size:12px;margin:0}
+.anatomy-private-detail-panel small{font-size:11px;line-height:1.6;color:var(--muted)}
+.anatomy-private-toolbar{display:flex;flex-wrap:wrap;gap:7px}
+.anatomy-private-toolbar button{border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--muted);padding:10px;font-size:11px;font-weight:700}
+.anatomy-private-toolbar button.active{border-color:var(--blue);color:var(--blue);background:var(--ice)}
+@media(max-width:750px){.anatomy-private-detail{grid-template-columns:1fr}.anatomy-private-full{min-height:200px}.anatomy-private-detail-panel{padding:8px}.anatomy-private-vault input{max-width:none;flex:1 1 100%}}
