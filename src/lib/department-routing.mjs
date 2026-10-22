@@ -33,6 +33,13 @@ const foundational=new Set(['Human Anatomy','Human Physiology','Medical Biochemi
 const normalize=s=>String(s||'').replace(/\s+/g,' ').trim();
 function clinicalTarget(stem){
  const s=stem;
+ // Use the active presenting problem rather than unrelated historical diagnoses.
+ if(RX.renal.test(s) && /\b(?:now presents|presents with|developed|acute oliguric|acute renal|acute kidney|oliguric renal)\b/i.test(s))return 'Internal Medicine';
+ if(RX.psychiatry.test(s) && (RX.cardiovascular.test(s)||RX.renal.test(s)) &&
+    !/\b(?:psychiatric|antipsychotic|antidepressant|treatment of depression|treatment of psychosis)\b/i.test(s))return null;
+ if(/\b(?:history of|well.controlled)\b[^.!?]{0,85}\b(?:coronary artery disease|hypertension)\b/i.test(s) &&
+    !/\b(?:orthopnea|orthopnoea|heart failure|chest pain|angina|myocardial infarction|heart attack|acute coronary)\b/i.test(s) &&
+    !RX.renal.test(s) && !RX.endocrine.test(s) && !RX.neurology.test(s))return null;
  if(RX.gyn.test(s))return 'Obstetrics and Gynecology';
  if(RX.hematology.test(s))return 'Hematology';
  if(RX.pediatrics.test(s))return 'Pediatrics and Child Health';
@@ -81,6 +88,9 @@ export function resolveQuestionDepartment(question){
   if(pharm && !RX.gyn.test(stem)){subject=PHARMA;reason='drug_focused_question_in_anatomy';}
   else if(target){subject=target;reason='clinical_management_mislabelled_anatomy';}
   else{subject=UNRESOLVED_SUBJECT;reason='unresolved_management_mislabelled_anatomy';review=true;}
+ } else if(source===ANATOMY && !clinical && !anatomical &&
+  /\b(?:diffusion|osmosis|transmembrane|direction (?:will|would) (?:these )?substances flow|movement of solutes|concentration gradient)\b/i.test(stem)){
+  subject=PHYSIO;reason='physiology_process_mislabelled_anatomy';
  } else if(source===ANATOMY && !anatomical && pharm){
   subject=PHARMA;reason='pharmacology_content_mislabelled_anatomy';
  } else if(source===ANATOMY && !anatomical && target && /\b(?:patient|presents?|diagnosis|case|syndrome|symptom|hospital|physician|most likely)\b/i.test(stem)){
