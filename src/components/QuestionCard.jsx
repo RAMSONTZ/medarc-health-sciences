@@ -114,8 +114,8 @@ export function QuestionCard({question,index=1,compact=false}) {
       {isMultiple&&<div className="question-controls"><button className="button button-primary" type="button" disabled={!Array.isArray(choice)||choice.length===0} onClick={submitMultiple}>Check selected answers</button><button className="question-reset" type="button" onClick={reset}>Clear attempt</button></div>}
       {!isMultiple&&choice&&<div className="question-controls"><button className="question-reset" type="button" onClick={reset}>Try again</button></div>}
     </>}
-    {storageReady&&checked&&!isWritten&&<div role="status" aria-live="polite" className={`answer-feedback ${hasKey?(isRight?'is-correct':'is-incorrect'):'is-pending'}`}>
-      <div className="feedback-intro"><Icon name={hasKey&&isRight?'check':'shield'} size={17}/><b>{hasKey?(isRight?'Matches the prepared answer':'Different from the prepared answer'):'Response saved — not graded'}</b></div>
+    {storageReady&&checked&&!isWritten&&<div role="status" aria-live="polite" className={`answer-feedback medarc-illustrated-feedback ${hasKey?(isRight?'is-correct':'is-incorrect'):'is-pending'}`}>
+      <div className="medarc-feedback-illustration" aria-hidden="true"/><div className="feedback-intro"><Icon name={hasKey&&isRight?'check':'shield'} size={17}/><b>{hasKey?(isRight?'Matches the prepared answer':'Different from the prepared answer'):'Response saved — not graded'}</b></div>
       {hasKey?<><p>Provisional answer: <strong>{presentedCorrect}</strong>{!Array.isArray(key)&&optionMap[key]?` — ${optionMap[key]}`:''}</p><Explanation answer={answer}/></>:<p>This question does not yet have a usable answer key and is not scored.</p>}
     </div>}
     {isWritten&&reveal&&<div className="answer-feedback is-pending" role="status">{answer?<Explanation answer={answer}/>:<p>A model answer has not yet been prepared for this question.</p>}</div>}

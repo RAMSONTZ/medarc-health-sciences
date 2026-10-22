@@ -25,7 +25,7 @@ export function Shell({children}){
  useEffect(()=>{const setting=localStorage.getItem('medarc:display-theme');const chosen=setting==='dark'?'dark':setting==='light'?'light':(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');setTheme(chosen);document.documentElement.dataset.theme=chosen;},[]);
  const toggleTheme=()=>{const chosen=theme==='dark'?'light':'dark';setTheme(chosen);document.documentElement.dataset.theme=chosen;try{localStorage.setItem('medarc:display-theme',chosen)}catch{}};
 
- const nav=<nav className="nav-list" aria-label="Main navigation">{sections.map(item=><Link key={item.href} className={`nav-link ${isActive(path,item.href)?'is-active':''}`} href={item.href} onClick={()=>setDrawer(false)}><Icon name={item.icon} size={19}/><span>{item.label}</span>{isActive(path,item.href)&&<span className="nav-indicator"/>}</Link>)}</nav>;
+ const nav=<nav className="nav-list" aria-label="Main navigation">{sections.map(item=><Link key={item.href} className={`nav-link ${isActive(path,item.href)?'is-active':''}`} href={item.href} title={item.label} aria-label={item.label} onClick={()=>setDrawer(false)}><Icon name={item.icon} size={19}/><span>{item.label}</span>{isActive(path,item.href)&&<span className="nav-indicator"/>}</Link>)}</nav>;
  return <div className="app-shell">
   <aside className={`sidebar ${drawer?'sidebar-open':''}`} aria-label="Site menu">
    <div className="sidebar-header"><Logo/><button className="icon-only close-side" onClick={()=>setDrawer(false)} aria-label="Close menu"><Icon name="x"/></button></div>

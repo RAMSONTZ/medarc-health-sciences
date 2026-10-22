@@ -26,6 +26,16 @@ export function getStats() {
 }
 function stringParam(v) { return typeof v === 'string' ? v.trim().slice(0,160) : ''; }
 function intParam(v, fallback=1) { const n = Number.parseInt(v, 10); return Number.isFinite(n) ? Math.max(1, Math.min(5000, n)) : fallback; }
+// Quarantine obvious document-import payloads from learner-facing question views.
+ // Original question IDs remain in bank.json and in the review/audit inventory.
+function malformedLearningRecord(q) {
+ const stem=String(q.stem||'').trim();
+ const sample=stem.slice(0,350);
+ const corrupted=/^<\?xml\b|^<\/?(?:w:|a:|v:|o:|xml)|^\{\\rtf|<w:document|xmlns[:=]|schemas\.openxmlformats|schemas-microsoft-com|mso-|\[Content_Types\]\.xml/i;
+ if (corrupted.test(sample)) return true;
+ const choices=(q.options||[]).map(o=>String(o.text||''));
+ return choices.filter(c=>corrupted.test(c.slice(0,350))).length>=2;
+}
 export function getQuestions(params = {}, answeredOnly = false, subjectLock = '') {
   const b=getBank();
   const subject = subjectLock || stringParam(params.subject);
@@ -38,6 +48,7 @@ export function getQuestions(params = {}, answeredOnly = false, subjectLock = ''
   const matched=[];
   for (const q of b.questions) {
     const hasAnswer=Boolean(b.answers[q.id]);
+    if (malformedLearningRecord(q)) continue;
     if (answeredOnly && !hasAnswer) continue;
     if (subject && q.subject !== subject) continue;
     if (topic && q.topic !== topic) continue;

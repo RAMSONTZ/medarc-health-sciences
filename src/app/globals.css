@@ -285,3 +285,58 @@ html[data-theme='dark'] .anatomy-private-full.anatomy-device-auto{background:#14
 @media(max-width:750px){.anatomy-private-detail{grid-template-columns:1fr}.anatomy-private-full{min-height:200px}.anatomy-private-detail-panel{padding:8px}.anatomy-private-vault input{max-width:none;flex:1 1 100%}}
 
 .mva-quick-actions{display:flex;flex-direction:column;align-items:flex-end;gap:8px}.mva-private-link{background:var(--blue);color:#fff;border-radius:9px;padding:11px 14px;font-size:12px;font-weight:800;white-space:nowrap}.mva-private-link:hover{filter:brightness(.92)}@media(max-width:680px){.mva-quick-actions{align-items:flex-start;margin-top:14px}}
+
+/* MedArc October 2026 UX renewal: intentional surfaces, accessible dark mode and African learner photography */
+.medarc-hero{min-height:390px;background:linear-gradient(122deg,#0c2848,#174778);isolation:isolate}
+.medarc-hero .hero-photo{inset:0 0 0 35%;background-image:url('/medarc/student-team.png');background-position:center bottom;background-size:contain;background-repeat:no-repeat;opacity:1}
+.medarc-hero .hero-shade{background:linear-gradient(90deg,rgba(7,27,51,.98) 0%,rgba(8,35,63,.96) 35%,rgba(9,40,73,.15) 77%,transparent)}
+.medarc-hero .hero-copy{max-width:620px}
+.medarc-home-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0}
+.medarc-home-link{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:19px 20px;border:1px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);min-height:91px;transition:transform .18s,border-color .18s}
+.medarc-home-link:hover,.medarc-home-link:focus-visible{border-color:var(--blue);transform:translateY(-2px)}
+.medarc-home-link strong,.medarc-home-link small{display:block}.medarc-home-link strong{font:800 13px/1.35 var(--font-heading)}.medarc-home-link small{margin-top:7px;color:var(--muted);font-size:11px}.medarc-home-link>span:last-child{font-size:19px;color:var(--blue)}
+.photo-editorial{background:#eaf2fa;color:#112d49;border:1px solid var(--line)}
+.photo-editorial-image{inset:0;background-image:url('/medarc/group-study.png');background-size:contain;background-position:center 0;background-repeat:no-repeat;filter:none}
+.photo-editorial::after{background:linear-gradient(180deg,transparent 30%,rgba(232,241,250,.8) 75%,#eaf2fa 100%)}
+.photo-editorial-inner>span,.photo-editorial-inner h3,.photo-editorial-inner a{color:#153653}.photo-editorial-inner h3 em{color:#145fc7}
+.topic-hero{background:linear-gradient(120deg,#102b49,#154d7d)}
+.topic-hero-photo{background-image:url('/medarc/group-study.png');background-size:contain;background-repeat:no-repeat;background-position:center bottom;mask-image:linear-gradient(90deg,transparent,black 28%)}
+.sidebar-photo{background-image:linear-gradient(180deg,rgba(11,37,61,.07),rgba(11,37,61,.78)),url('/medarc/student-team.png');background-size:cover,contain;background-repeat:no-repeat;background-position:center,center bottom}
+.filter-panel{position:static;top:auto;padding:17px 19px}
+.filter-panel summary{cursor:pointer;list-style:none;display:flex;align-items:center;padding:6px 0;margin:0;color:var(--ink)}
+.filter-panel summary::-webkit-details-marker{display:none}
+.filter-panel[open] summary{margin-bottom:15px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.filter-panel form{min-width:0}
+.workbench{grid-template-columns:minmax(180px,225px) minmax(0,1fr);gap:17px}
+.question-card{padding:24px;overflow-wrap:anywhere}
+.question-stem{white-space:pre-wrap}
+.medarc-illustrated-feedback{position:relative;min-height:95px;padding-right:105px}
+.medarc-feedback-illustration{width:87px;height:100px;position:absolute;right:8px;bottom:3px;background-image:url('/medarc/student-team.png');background-position:center bottom;background-size:contain;background-repeat:no-repeat;opacity:.8}
+.answer-feedback.is-correct .medarc-feedback-illustration{background-image:url('/medarc/student-team.png')}
+.answer-feedback.is-incorrect .medarc-feedback-illustration,.answer-feedback.is-pending .medarc-feedback-illustration{background-image:url('/medarc/group-study.png')}
+html[data-theme='dark']{--navy:#f1f6ff;--navy-deep:#dceaff;--ink:#edf3fc;--muted:#b9c9da;--paper:#182b43;--line:#3a506b;--mist:#0d1b2d;--ice:#223c5b;--blue:#8bb9ff;--blue-dark:#a5cbff;--teal:#70d5bd;--shadow:0 12px 32px rgba(0,0,0,.14)}
+html[data-theme='dark'] body{background:#0d1b2d;color:var(--ink)}
+html[data-theme='dark'] .sidebar,html[data-theme='dark'] .topbar,html[data-theme='dark'] .site-footer{background:#12243a;color:var(--ink);border-color:var(--line)}
+html[data-theme='dark'] .brand-word b,html[data-theme='dark'] .dashboard-welcome h1,html[data-theme='dark'] .section-heading h2,html[data-theme='dark'] .page-title{color:var(--ink)}
+html[data-theme='dark'] .stat-strip,html[data-theme='dark'] .feature-card,html[data-theme='dark'] .question-card,html[data-theme='dark'] .subject-rows,html[data-theme='dark'] .filter-panel,html[data-theme='dark'] .topic-card,html[data-theme='dark'] .exam-card,html[data-theme='dark'] .count-chip{background:var(--paper);color:var(--ink);border-color:var(--line)}
+html[data-theme='dark'] .stat-strip .stat-aside,html[data-theme='dark'] .nav-link.is-active{background:#244264;color:#a9cfff}
+html[data-theme='dark'] .subject-row:hover,html[data-theme='dark'] .nav-link:hover{background:#233c5a;color:#f5f8fd}
+html[data-theme='dark'] .subject-name,html[data-theme='dark'] .subject-row,html[data-theme='dark'] .feature-lower h3,html[data-theme='dark'] .question-stem,html[data-theme='dark'] .topic-card strong,html[data-theme='dark'] .stat-strip strong{color:var(--ink)}
+html[data-theme='dark'] .global-search,html[data-theme='dark'] .field-input,html[data-theme='dark'] .written-input,html[data-theme='dark'] .answer-option,html[data-theme='dark'] .smart-search input,html[data-theme='dark'] input,html[data-theme='dark'] select,html[data-theme='dark'] textarea{background:#203751;color:#eef5ff;border-color:#526a86}
+html[data-theme='dark'] input::placeholder,html[data-theme='dark'] textarea::placeholder{color:#b5c5d7;opacity:1}
+html[data-theme='dark'] .answer-option,.medarc-home-link{color:var(--ink)}
+html[data-theme='dark'] .answer-option:hover{background:#274669;border-color:#9ebfe8}
+html[data-theme='dark'] .answer-option.chosen{background:#25466d;border-color:#8bb9ff;color:#fff}
+html[data-theme='dark'] .answer-option .option-letter{background:#f5f8ff;color:#24415e;border-color:#c6d7e8}
+html[data-theme='dark'] .answer-option.chosen .option-letter{background:#4787d7;color:#fff}
+html[data-theme='dark'] .question-tags span,html[data-theme='dark'] .question-index,html[data-theme='dark'] .question-state.ready{background:#34516c;color:#e7f5ff}
+html[data-theme='dark'] .answer-feedback.is-correct{background:#143a32;color:#dcfaeb;border-color:#347c60}
+html[data-theme='dark'] .answer-feedback.is-incorrect{background:#472f35;color:#ffe2d9;border-color:#a9716a}
+html[data-theme='dark'] .answer-feedback.is-pending{background:#223b59;color:#edf5ff;border-color:#557699}
+html[data-theme='dark'] .answer-feedback p,html[data-theme='dark'] .answer-feedback b,html[data-theme='dark'] .answer-text,html[data-theme='dark'] .explanation-body{color:inherit}
+html[data-theme='dark'] .photo-editorial{background:#172b43;color:#edf5ff}
+html[data-theme='dark'] .photo-editorial::after{background:linear-gradient(180deg,transparent 25%,rgba(20,37,57,.7) 73%,#142539 100%)}
+html[data-theme='dark'] .photo-editorial-inner>span,html[data-theme='dark'] .photo-editorial-inner h3,html[data-theme='dark'] .photo-editorial-inner a{color:#f2f7ff}
+html[data-theme='dark'] .topic-card,html[data-theme='dark'] .mva{background:var(--paper)}
+@media (max-width:1100px){.medarc-home-links{grid-template-columns:repeat(2,minmax(0,1fr))}.medarc-hero .hero-photo{inset:0 0 0 47%}.medarc-hero .hero-copy{padding:30px}}
+@media (max-width:760px){.medarc-home-links{grid-template-columns:1fr 1fr;gap:8px}.medarc-home-link{min-height:88px;padding:13px}.medarc-hero{min-height:470px;align-items:flex-start}.medarc-hero .hero-photo{inset:38% 0 0 0;background-position:center bottom}.medarc-hero .hero-shade{background:linear-gradient(180deg,#0a2749 0%,rgba(10,39,73,.98) 37%,rgba(10,39,73,.02) 75%)}.medarc-hero .hero-copy{padding:22px;max-width:none}.medarc-hero .hero-copy h2{font-size:29px}.medarc-hero .hero-copy p{max-width:340px}.hero-number{display:none}.workbench{grid-template-columns:minmax(0,1fr)}.question-card{padding:16px}.medarc-illustrated-feedback{padding-right:16px;padding-bottom:70px}.medarc-feedback-illustration{height:66px;width:90px}}
