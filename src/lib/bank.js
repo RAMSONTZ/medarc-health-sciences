@@ -24,6 +24,17 @@ export function getStats() {
   const b = getBank();
   return { questions: b.questions.length, exams: b.exams.length, answered: Object.keys(b.answers || {}).length };
 }
+// Imported XML/Office fragments and encoding failures are source-data defects,
+// not questions. Hide them from learner views without deleting original IDs.
+export function isStudyableQuestion(q){
+ if(!q || typeof q.stem!=='string' || !q.stem.trim())return false;
+ const stem=q.stem.trim();
+ const corpus=[stem,...(Array.isArray(q.options)?q.options.map(o=>String(o?.text||'')):[])].join(' ');
+ if(/<\?xml\b|<\/?(?:w:document|office:|v:|a:clrMap)|schemas\.openxmlformats\.org|schemas-microsoft-com:office|mso-(?:style|fareast)/i.test(corpus))return false;
+ if(/(?:Ã.|Â.|â€|ðŸ|�){3,}/.test(corpus))return false;
+ if(/[\u0000-\u0008\u000e-\u001f]/.test(corpus))return false;
+ return true;
+}
 function stringParam(v) { return typeof v === 'string' ? v.trim().slice(0,160) : ''; }
 function intParam(v, fallback=1) { const n = Number.parseInt(v, 10); return Number.isFinite(n) ? Math.max(1, Math.min(5000, n)) : fallback; }
 export function getQuestions(params = {}, answeredOnly = false, subjectLock = '') {
@@ -52,8 +63,11 @@ export function getQuestions(params = {}, answeredOnly = false, subjectLock = ''
   const pages=Math.max(1,Math.ceil(count/limit));
   const safePage=Math.min(page,pages);
   const questions=matched.slice((safePage-1)*limit,safePage*limit).map(q=>({
-    id:q.id, stem:q.stem, subject:q.subject, topic:q.topic, type:q.type,
-    options:q.options||[], status:q.answerAuditStatus||q.status,
+    id:q.id,
+    stem:isStudyableQuestion(q)?q.stem:'Source text needs review — this imported record cannot be displayed safely as a medical learning question.',
+    sourceUnreadable:!isStudyableQuestion(q),
+    subject:q.subject, topic:q.topic, type:q.type,
+    options:isStudyableQuestion(q)?(q.options||[]):[], status:q.answerAuditStatus||q.status,
     priority:q.priority, answer:b.answers[q.id]||null
   }));
   let topics=[];
@@ -70,7 +84,7 @@ export function getExam(id,position=1) {
   const b=getBank(); const exam=b.examById.get(id); if(!exam)return null;
   const pos=Math.min(intParam(position),exam.questionIds.length||1);
   const source=b.questionById.get(exam.questionIds[pos-1]);
-  const q=source?{id:source.id,stem:source.stem,subject:source.subject,topic:source.topic,type:source.type,options:source.options||[],status:source.answerAuditStatus||source.status,answer:b.answers[source.id]||null}:null;
+  const q=source?{id:source.id,stem:isStudyableQuestion(source)?source.stem:'Source text needs review — this imported record cannot be displayed safely as a medical learning question.',sourceUnreadable:!isStudyableQuestion(source),subject:source.subject,topic:source.topic,type:source.type,options:isStudyableQuestion(source)?(source.options||[]):[],status:source.answerAuditStatus||source.status,answer:b.answers[source.id]||null}:null;
   return {exam:{id:exam.id,title:exam.title,subject:exam.subject,total:exam.questionIds.length},question:q,pos};
 }
 export function getAudit(pageRaw=1) {

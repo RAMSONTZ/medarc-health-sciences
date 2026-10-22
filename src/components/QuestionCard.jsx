@@ -1,6 +1,7 @@
 'use client';
 import {useCallback, useEffect, useState} from 'react';
 import {Icon} from './Icons';
+import {LearningMoment,moments} from './MedArcVisual';
 import {evaluateAnswer} from '@/lib/scoring';
 
 // Deliberately separate learner attempts from the original source answer keys.
@@ -92,6 +93,7 @@ export function QuestionCard({question,index=1,compact=false}) {
   const optionMap=Object.fromEntries(options.map(o=>[o.label,o.text]));
   const presentedCorrect=Array.isArray(key)?key.join(', '):key;
 
+  if(question.sourceUnreadable)return <article className="question-card medarc-quarantine" aria-labelledby={`stem-${id}`}><div className="question-heading"><div className="question-index">Q{index}</div><span className="question-state pending">Source review required</span></div><h3 className="question-stem" id={`stem-${id}`}>{question.stem}</h3><p>This imported document contains formatting or encoding defects. To prevent misleading study material, its original text and answer options are not shown here. The source record is retained unchanged for audit and correction.</p><div className="question-bottom">Record ID · {id} <span>Not available for grading</span></div></article>;
   return <article className={`question-card ${compact?'question-compact':''}`} aria-labelledby={`stem-${id}`}>
     <div className="question-heading">
       <div className="question-index">Q{index}</div>
@@ -115,10 +117,13 @@ export function QuestionCard({question,index=1,compact=false}) {
       {!isMultiple&&choice&&<div className="question-controls"><button className="question-reset" type="button" onClick={reset}>Try again</button></div>}
     </>}
     {storageReady&&checked&&!isWritten&&<div role="status" aria-live="polite" className={`answer-feedback ${hasKey?(isRight?'is-correct':'is-incorrect'):'is-pending'}`}>
-      <div className="feedback-intro"><Icon name={hasKey&&isRight?'check':'shield'} size={17}/><b>{hasKey?(isRight?'Matches the prepared answer':'Different from the prepared answer'):'Response saved — not graded'}</b></div>
+      <div className="medarc-feedback-heading">
+        <LearningMoment className="feedback-visual" moment={hasKey&&isRight?moments[16]:hasKey?moments[17]:moments[19]}/>
+        <div><div className="feedback-intro"><Icon name={hasKey&&isRight?'check':'shield'} size={17}/><b>{hasKey?(isRight?'Matches the prepared answer':'Different from the prepared answer'):'Response saved — not graded'}</b></div><small>{hasKey?'This is a provisional educational reference, not a clinically validated grade.':'No verified answer key available. Keep studying.'}</small></div>
+      </div>
       {hasKey?<><p>Provisional answer: <strong>{presentedCorrect}</strong>{!Array.isArray(key)&&optionMap[key]?` — ${optionMap[key]}`:''}</p><Explanation answer={answer}/></>:<p>This question does not yet have a usable answer key and is not scored.</p>}
     </div>}
-    {isWritten&&reveal&&<div className="answer-feedback is-pending" role="status">{answer?<Explanation answer={answer}/>:<p>A model answer has not yet been prepared for this question.</p>}</div>}
+    {isWritten&&reveal&&<div className="answer-feedback is-pending" role="status"><div className="medarc-feedback-heading"><LearningMoment className="feedback-visual" moment={moments[19]}/><div>{answer?<Explanation answer={answer}/>:<p>A model answer has not yet been prepared for this question.</p>}</div></div></div>}
     {hasKey&&!isWritten&&!checked&&<p className="question-hint">{isMultiple?'Choose every applicable option, then press “Check selected answers”.':'Choose an option to view immediate feedback and a provisional explanation.'}</p>}
     <div className="question-bottom"><span>Record ID · {id}</span><span>Education only · Answer verification pending</span></div>
   </article>;
