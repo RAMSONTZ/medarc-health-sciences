@@ -18,7 +18,20 @@ test('never serve the full standalone bank from /public',()=>{
   const publicFiles=walk(publicDir);
   assert.ok(!publicFiles.some(file=>/Previous_Studio\.html$/i.test(file)), 'Legacy HTML must not be publicly accessible');
   assert.ok(!publicFiles.some(file=>/bank\.json$/i.test(file)), 'Bank JSON must not be served statically');
-  assert.ok(publicFiles.every(file=>fs.statSync(file).size<1_000_000), 'Unexpected large public asset might contain full bank');
+  // Realistic PNG homepage imagery legitimately exceeds 1 MB.
+  // Large non-image files remain disallowed; inspect actual image signatures,
+  // not filenames alone, to prevent accidental bank publication.
+  assert.ok(publicFiles.every(file=>{
+    const size=fs.statSync(file).size;
+    if(size<1_000_000)return true;
+    if(size>8_000_000)return false;
+    const fd=fs.openSync(file,'r');
+    const header=Buffer.alloc(12);fs.readSync(fd,header,0,12,0);fs.closeSync(fd);
+    const png=header.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10]));
+    const jpg=header[0]===255&&header[1]===216&&header[2]===255;
+    const webp=header.subarray(0,4).toString()==='RIFF'&&header.subarray(8,12).toString()==='WEBP';
+    return png||jpg||webp;
+  }), 'Unexpected large non-image public asset might contain question bank');
   assert.ok(fs.existsSync(path.join(root,'data','bank.json')), 'Private bank missing');
   assert.ok(!fs.existsSync(path.join(root,'offline-archive')), 'Legacy archive must not be shipped with the public repository');
 });
