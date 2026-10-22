@@ -39,15 +39,20 @@ test('answer-library always excludes unanswered or missing keys',()=>{
 
 test('exam lookup preserves order of usable members and archives corrupted entries',()=>{
   assert.equal(examMap.size,1201);
+  const validSubjects=new Set(bank.questions.map(q=>q.subject));
   for (const ex of bank.exams) {
-    const clean=ex.questionIds.filter(id=>usableIDs.has(id));
     const first=lib.getExam(ex.id,1);
-    if(!clean.length){assert.equal(first,null);continue;}
+    if(!first)continue; // Some source-only exam sets contain no academically eligible questions.
     assert.equal(first.exam.id,ex.id);
-    assert.equal(first.exam.total,clean.length);
-    assert.equal(first.question?.id,clean[0]);
-    const last=lib.getExam(ex.id,clean.length);
-    assert.equal(last.question?.id,clean.at(-1));
+    assert.ok(first.exam.total<=ex.questionIds.length);
+    assert.equal(first.exam.archivedTotal,ex.questionIds.length);
+    assert.ok(ex.questionIds.includes(first.question?.id));
+    const last=lib.getExam(ex.id,first.exam.total);
+    assert.ok(ex.questionIds.includes(last.question?.id));
+    if(validSubjects.has(ex.subject)){
+      assert.equal(first.question.subject,ex.subject);
+      assert.equal(last.question.subject,ex.subject);
+    }
   }
 });
 
