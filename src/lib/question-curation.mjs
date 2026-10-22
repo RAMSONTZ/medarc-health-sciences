@@ -140,9 +140,9 @@ export function curateQuestion(question){
   const signal=[
     [S.PARA,RX.parasite],[S.MICRO,RX.micro],[S.BIO,RX.biochemistry],
     [S.IMM,RX.immunology],[S.EMBRYO,RX.embryo],[S.HIST,RX.histology],
-    [S.EPI,RX.epi],[S.BIOSTATS,RX.stats],[S.GEN,RX.genetic]
+    [S.EPID,RX.epi],[S.BIOSTATS,RX.stats],[S.GEN,RX.genetic]
   ].filter(([,rx])=>rx.test(actualQuestion));
-  if(signal.length===1 && (actualQuestion.length<220 || rxMatches(full,signal[0][1])>=2)){
+  if(signal.length===1 && typeof signal[0][0]==='string' && (actualQuestion.length<220 || rxMatches(full,signal[0][1])>=2)){
     subject=signal[0][0];reason='explicit_unclassified_discipline';confidence='medium';review=true;
   }
  }
