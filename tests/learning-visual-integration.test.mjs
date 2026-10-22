@@ -7,7 +7,7 @@ const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const dir=path.join(root,'public','medarc','visuals');
 const read=f=>fs.readFileSync(path.join(root,f),'utf8');
 test('all 20 user-provided transparent study visuals are local valid WebP files',()=>{
-  const files=fs.readdirSync(dir).filter(name=>/^\\d{2}_.*\\.webp$/.test(name));
+  const files=fs.readdirSync(dir).filter(name=>name.endsWith('.webp') && /^[0-9][0-9]_/.test(name));
   assert.equal(files.length,20,'Expected exactly 20 individual transparent assets');
   for(const name of files){
     const bytes=fs.readFileSync(path.join(dir,name));
