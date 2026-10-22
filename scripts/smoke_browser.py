@@ -16,7 +16,7 @@ from pathlib import Path
 from playwright.async_api import async_playwright
 
 BASE=(sys.argv[1] if len(sys.argv)>1 else 'http://localhost:3000').rstrip('/')
-ROUTES=['/','/topics','/practice','/answers','/exams','/anatomy','/review','/visual-learning']
+ROUTES=['/','/topics','/practice','/answers','/exams','/anatomy','/review','/visual-learning','/group-exams']
 VIEWPORTS=[{'width':390,'height':844}, {'width':768,'height':1024}, {'width':1440,'height':960}]
 
 async def assert_route(page, route):
@@ -32,7 +32,7 @@ async def assert_route(page, route):
 async def check_uploaded_visuals(page):
     await page.goto(BASE,wait_until='domcontentloaded')
     pathways=page.locator('.medarc-learning-route')
-    assert await pathways.count()==6,'Homepage missing illustrated learning pathways'
+    assert await pathways.count()==7,'Homepage must include group examinations alongside the six learning pathways'
     hero_image=pathways.first.locator('img')
     await hero_image.scroll_into_view_if_needed()
     await hero_image.evaluate('(img) => img.decode()')

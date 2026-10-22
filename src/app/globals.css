@@ -608,3 +608,91 @@ html[data-theme='dark'] .medarc-feedback-heading .feedback-intro{color:inherit}
  .medarc-illustrated-feedback{padding:13px 14px}
 }
 @media(max-width:380px){.medarc-learning-route{min-height:203px}.medarc-learning-route .medarc-route-image{height:98px}}
+
+
+/* MedArc live study groups — crisp, readable, light/dark resilient */
+.medarc-exam-room-page{max-width:1180px;margin:auto;display:flex;flex-direction:column;gap:20px}
+.medarc-exam-room-hero{display:flex;justify-content:space-between;align-items:center;min-height:255px;overflow:hidden;border:1px solid var(--line);background:linear-gradient(120deg,#f7fbff,#e7f1fc);border-radius:18px;padding:26px 36px}
+.medarc-exam-room-hero>div{max-width:720px;position:relative;z-index:1}
+.medarc-exam-room-hero h1{font:800 clamp(25px,3vw,38px)/1.2 var(--font-heading);letter-spacing:-1.25px;margin:10px 0 13px;color:#102b49}
+.medarc-exam-room-hero p{max-width:610px;font-size:13px;line-height:1.75;color:#415b75;margin:0}
+.medarc-exam-room-hero img{object-fit:contain;align-self:flex-end;object-position:center bottom;width:28%;max-width:265px;height:238px}
+.medarc-exam-pillrow{display:flex;gap:7px;flex-wrap:wrap;margin-top:18px}
+.medarc-exam-pillrow span{border:1px solid #c9daec;color:#315475;background:#fffaf3;border-radius:30px;padding:7px 11px;font-size:10px;font-weight:700}
+.medarc-exam-tabs{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.medarc-exam-tabs button{appearance:none;padding:11px 17px;font:800 12px var(--font-heading);border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--muted);cursor:pointer}
+.medarc-exam-tabs button.selected{background:#2666bb;color:#fff;border-color:#2666bb}
+.medarc-exam-tabs button:disabled{opacity:.45;cursor:not-allowed}
+.medarc-exam-panel{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:clamp(19px,3vw,32px)}
+.medarc-exam-panel h2{font:800 21px/1.35 var(--font-heading);letter-spacing:-.45px;color:var(--ink);margin:0 0 5px}
+.medarc-exam-panel h3{font:800 14px var(--font-heading);margin:0 0 10px;color:var(--ink)}
+.medarc-exam-panel p{color:var(--muted);font-size:12px;line-height:1.7}
+.medarc-exam-form{display:flex;flex-direction:column;gap:18px}
+.medarc-exam-form label{display:flex;flex-direction:column;gap:8px;color:var(--ink);font-size:11px;font-weight:800;min-width:0}
+.medarc-exam-form select,.medarc-exam-form input,.medarc-group-question textarea{background:var(--mist);border:1px solid var(--line);border-radius:10px;min-height:44px;padding:10px 13px;font:600 13px var(--font-body);color:var(--ink);width:100%;min-width:0}
+.medarc-exam-form select:focus-visible,.medarc-exam-form input:focus-visible,.medarc-group-question textarea:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.medarc-exam-form .button{align-self:flex-start}
+.medarc-exam-grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px}
+.medarc-exam-hint{font-size:11px;line-height:1.7;border:1px solid var(--line);padding:13px 16px;background:var(--mist);border-radius:10px;color:var(--muted)}
+.medarc-exam-hint strong{color:var(--ink)}
+.medarc-exam-notice{background:#e9f5ff;border:1px solid #bfd7f0;border-radius:10px;padding:12px 16px;font-size:12px;font-weight:700;color:#164c81}
+.medarc-exam-notice.error{background:#fff3f3;border-color:#e9bdbd;color:#9d2525}
+.medarc-room-head{display:flex;justify-content:space-between;gap:20px;align-items:center}
+.medarc-room-head .eyebrow{font-size:9px}
+.medarc-exam-room-code{min-width:185px;border:1px dashed var(--line);padding:11px 17px;border-radius:10px;background:var(--mist);display:flex;flex-direction:column;align-items:center;gap:4px}
+.medarc-exam-room-code small{font-size:9px;color:var(--muted);letter-spacing:.1em}
+.medarc-exam-room-code strong{font:800 21px var(--font-heading);color:var(--ink);letter-spacing:.08em}
+.medarc-quiz-small{border:1px solid var(--line);background:var(--paper);color:var(--blue);border-radius:7px;padding:5px 9px;font:800 10px var(--font-body);cursor:pointer;white-space:nowrap}
+.medarc-quiz-small:hover{border-color:var(--blue)}
+.medarc-room-status{display:flex;gap:13px;flex-wrap:wrap;font-size:10px;margin:22px 0;padding:13px 0;border-bottom:1px solid var(--line);border-top:1px solid var(--line);color:var(--muted)}
+.medarc-room-status span{padding-right:13px;border-right:1px solid var(--line)}
+.medarc-room-status strong{color:var(--ink)}
+.medarc-room-secret{border:1px solid #bdd3eb;background:var(--mist);border-radius:12px;padding:18px;margin-bottom:24px}
+.medarc-room-secret p{max-width:700px}
+.medarc-room-roster{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:15px 0}
+.medarc-room-roster>div{display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--paper);border:1px solid var(--line);padding:10px;border-radius:8px}
+.medarc-room-roster strong{font-size:11px;color:var(--ink)}
+.medarc-room-roster code{font:700 11px monospace;color:var(--ink)}
+.medarc-room-admin-key{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:16px 0;padding:12px 15px;background:var(--paper);border-radius:10px}
+.medarc-room-admin-key span{display:flex;flex-direction:column;gap:6px}
+.medarc-room-admin-key b{font-size:11px;color:var(--ink)}
+.medarc-room-admin-key small{font-size:10px;line-height:1.6;color:var(--muted)}
+.medarc-exam-participant-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:12px 0 20px}
+.medarc-exam-participant{display:flex;align-items:start;gap:5px;flex-direction:column;min-height:95px;border:1px solid var(--line);border-radius:10px;padding:12px;background:var(--mist)}
+.medarc-exam-participant>span{font-size:10px;border-radius:50%;background:var(--ice);width:25px;height:25px;display:grid;place-items:center;color:var(--blue);font-weight:800}
+.medarc-exam-participant strong{font-size:11px;color:var(--ink)}
+.medarc-exam-participant small{font-size:9px;color:var(--muted)}
+.medarc-exam-control{border:1px solid var(--line);padding:17px;border-radius:12px;background:var(--mist);display:flex;flex-direction:column;gap:12px;align-items:flex-start}
+.medarc-exam-control p{margin:0}
+.medarc-group-timer{display:flex;justify-content:space-between;align-items:center;background:#153757;color:#fff;border-radius:12px;padding:16px 20px;margin:18px 0}
+.medarc-group-timer span{font-size:11px}
+.medarc-group-timer strong{font:800 24px var(--font-heading);font-variant-numeric:tabular-nums}
+.medarc-group-question-top{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--muted);margin:18px 0 10px}
+.medarc-group-question{border:1px solid var(--line);background:var(--mist);border-radius:13px;padding:22px}
+.medarc-group-question>p{font:800 17px/1.55 var(--font-heading);margin:0 0 20px;color:var(--ink)}
+.medarc-group-options{display:flex;flex-direction:column;gap:9px}
+.medarc-group-options label{display:flex;align-items:flex-start;gap:12px;border:1px solid var(--line);background:var(--paper);border-radius:10px;padding:13px;cursor:pointer;font-size:13px;line-height:1.6;color:var(--ink)}
+.medarc-group-options label.is-chosen{border:2px solid var(--blue);background:var(--ice)}
+.medarc-group-options input{margin-top:4px;accent-color:var(--blue)}
+.medarc-group-question-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;margin-top:17px}
+.medarc-group-question-actions .button{min-height:40px}
+.medarc-results-table{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-top:15px}
+.medarc-results-table>div{display:grid;grid-template-columns:40px 1fr 1fr 100px;align-items:center;gap:12px;padding:13px 17px;border-bottom:1px solid var(--line);font-size:12px;color:var(--muted)}
+.medarc-results-table>div:last-child{border-bottom:0}
+.medarc-results-table strong,.medarc-results-table b{color:var(--ink)}
+.medarc-exam-footer{font-size:10px;line-height:1.7;color:var(--muted);margin:0 0 25px}
+html[data-theme='dark'] .medarc-exam-room-hero{background:linear-gradient(120deg,#1a3149,#243f5c)}
+html[data-theme='dark'] .medarc-exam-room-hero h1{color:#edf5ff}
+html[data-theme='dark'] .medarc-exam-room-hero p{color:#d5e3f4}
+html[data-theme='dark'] .medarc-exam-pillrow span{color:#e2f0fc;background:#2a4563;border-color:#536c88}
+html[data-theme='dark'] .medarc-exam-notice{background:#203c5a;color:#f1f8ff;border-color:#4e789b}
+html[data-theme='dark'] .medarc-exam-notice.error{background:#4b2a33;color:#ffe5e5;border-color:#a46a77}
+html[data-theme='dark'] .medarc-exam-form input,html[data-theme='dark'] .medarc-exam-form select,html[data-theme='dark'] .medarc-group-question textarea{background:#20364f!important;color:#f4f8ff!important;border-color:#5a7289!important}
+html[data-theme='dark'] .medarc-group-options label.is-chosen{background:#25496a}
+@media(max-width:850px){.medarc-exam-participant-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.medarc-room-roster{grid-template-columns:1fr}.medarc-exam-room-hero{padding:23px}.medarc-exam-room-hero img{width:32%}}
+@media(max-width:600px){.medarc-exam-room-hero{min-height:400px;align-items:flex-start;position:relative;padding:24px 19px}.medarc-exam-room-hero>div{max-width:100%}.medarc-exam-room-hero p{max-width:95%;font-size:11px}.medarc-exam-room-hero img{position:absolute;bottom:-8px;right:-7px;width:48%;height:155px;opacity:.8}.medarc-exam-pillrow{max-width:60%;margin-top:19px}.medarc-exam-pillrow span{font-size:9px}.medarc-exam-grid2{grid-template-columns:1fr;gap:13px}.medarc-exam-participant-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.medarc-room-head{flex-direction:column;align-items:flex-start}.medarc-exam-room-code{align-self:stretch}.medarc-room-admin-key{align-items:flex-start;flex-direction:column}.medarc-exam-form .button{width:100%}.medarc-exam-tabs button{padding:10px 12px;font-size:10px}.medarc-room-status{gap:7px}.medarc-group-question{padding:15px}.medarc-results-table>div{grid-template-columns:23px 1fr auto 45px;gap:5px;padding:10px 8px;font-size:10px}.medarc-group-question-actions .button{font-size:11px;flex:1}}
+
+
+.medarc-exam-form textarea{width:100%;resize:vertical;min-height:108px;padding:12px 14px;background:var(--mist);color:var(--ink);border:1px solid var(--line);border-radius:10px;font:600 12px/1.7 var(--font-body)}
+.medarc-group-custom-names small{font-size:10px;font-weight:500;line-height:1.65;color:var(--muted)}
+html[data-theme='dark'] .medarc-exam-form textarea{background:#20364f;color:#f4f8ff;border-color:#5a7289}

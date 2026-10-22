@@ -1,0 +1,20 @@
+name: Live group exam integration
+on:
+  push:
+    branches:
+      - medarc-live-group-exams-20261022
+permissions:
+  contents: read
+jobs:
+  group-room-e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Exercise live leader, student and admin examination workflow
+        env:
+          MEDARC_E2E_BASE: https://medarc-health-sciences-git-medar-a7c0f2-majidra7-7283s-projects.vercel.app
+        run: node scripts/e2e-group-room.mjs

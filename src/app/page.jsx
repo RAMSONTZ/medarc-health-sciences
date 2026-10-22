@@ -5,6 +5,7 @@ import {StudyFocus} from '@/components/StudyFocus';
 import {LEARNING_VISUALS} from '@/lib/learningVisuals';
 export const metadata={title:'Overview'};
 const primaryDestinations=[
+ {href:'/group-exams',title:'Group examinations',desc:'Create rooms and study together',image:'/medarc/visuals/02_collaborative_study.webp',alt:'African students taking part in collaborative learning'},
  {href:'/practice',title:'Practice questions',desc:'Build clinical recall',image:'/medarc/visuals/01_welcome_medical_student.webp',alt:'African medical student holding textbooks'},
  {href:'/topics',title:'Explore subjects',desc:'Learn across disciplines',image:'/medarc/visuals/02_collaborative_study.webp',alt:'Medical students discussing a topic'},
  {href:'/answers',title:'Review explanations',desc:'Reflect on your answers',image:'/medarc/visuals/08_pharmacology_revision.webp',alt:'Medical student reviewing textbooks'},
