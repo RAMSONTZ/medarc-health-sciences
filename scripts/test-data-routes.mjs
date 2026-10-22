@@ -1,11 +1,13 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
+import {pathToFileURL} from 'node:url';
 
 // Source-level functional test: loads the exact data utilities without the
 // Next.js-only server-only marker; no mocked question records are used.
 const source=fs.readFileSync(path.join(process.cwd(),'src/lib/bank.js'),'utf8')
-  .replace(/^import 'server-only';\s*/m,'');
+  .replace(/^import 'server-only';\s*/m,'')
+  .replace("from './question-quality.mjs';", "from '"+pathToFileURL(path.join(process.cwd(),'src/lib/question-quality.mjs')).href+"';");
 const lib=await import(`data:text/javascript;base64,${Buffer.from(source).toString('base64')}`);
 const bank=lib.getBank();
 const expected=lib.getStats();
@@ -15,22 +17,26 @@ assert.equal(bank.examById.size,expected.exams);
 assert.ok(bank.types.includes('Single Best Answer MCQ'));
 assert.ok(bank.types.includes('Short Answer'));
 
+const report=lib.getQuestionQualityReport();
+assert.ok(report.quarantined>=0 && report.quarantined<expected.questions);
+assert.equal(report.total,expected.questions);
+assert.equal(report.available+report.quarantined,expected.questions);
 const initial=lib.getQuestions();
-assert.equal(initial.count,expected.questions);
+assert.equal(initial.count,report.available);
 assert.equal(initial.questions.length,10);
 assert.equal(initial.page,1);
-assert.equal(initial.pages,3007);
+assert.equal(initial.pages,Math.ceil(report.available/10));
 const final=lib.getQuestions({page:'999999'});
-assert.equal(final.page,3007);
-assert.equal(final.questions.length,8);
+assert.equal(final.page,Math.ceil(report.available/10));
+assert.equal(final.questions.length,report.available%10||10);
 const answered=lib.getQuestions({},true);
-assert.equal(answered.count,expected.answered);
+assert.ok(answered.count<=expected.answered);
 assert.equal(answered.questions.length,10);
 assert.ok(answered.questions.every(q=>q.answer));
 const unanswered=lib.getQuestions({status:'unanswered'});
-assert.equal(unanswered.count,expected.questions-expected.answered);
+assert.equal(unanswered.count,report.available-answered.count);
 assert.ok(unanswered.questions.every(q=>!q.answer));
-const selected=bank.questions[0];
+const selected=bank.questions.find(q=>!report.excluded.has(q.id));
 const found=lib.getQuestions({q:selected.id}); // search excludes IDs by design
 assert.equal(typeof found.count,'number');
 const selectedSubject=lib.getQuestions({subject:selected.subject});
@@ -41,16 +47,16 @@ assert.ok(selectedTopic.count>0);
 assert.ok(selectedTopic.questions.every(q=>q.subject===selected.subject&&q.topic===selected.topic));
 assert.ok(selectedTopic.topics.includes(selected.topic));
 const baseExams=lib.getExams();
-assert.equal(baseExams.count,1201);
+assert.ok(baseExams.count<=1201&&baseExams.count>0);
 assert.equal(baseExams.exams.length,16);
-const firstExam=bank.exams.find(e=>e.questionIds?.length>1);
+const firstExam=bank.exams.find(e=>e.questionIds?.filter(id=>!report.excluded.has(id)).length>1);
 assert.ok(firstExam);
 const opened=lib.getExam(firstExam.id,1);
 assert.equal(opened.exam.id,firstExam.id);
-assert.equal(opened.exam.total,firstExam.questionIds.length);
-assert.equal(opened.question.id,firstExam.questionIds[0]);
+assert.equal(opened.exam.total,firstExam.questionIds.filter(id=>!report.excluded.has(id)).length);
+assert.equal(opened.question.id,firstExam.questionIds.filter(id=>!report.excluded.has(id))[0]);
 const openedNext=lib.getExam(firstExam.id,2);
-assert.equal(openedNext.question.id,firstExam.questionIds[1]);
+assert.equal(openedNext.question.id,firstExam.questionIds.filter(id=>!report.excluded.has(id))[1]);
 assert.equal(lib.getExam('no-such-exam'),null);
 const auditFirst=lib.getAudit();
 assert.equal(auditFirst.count,expected.questions);

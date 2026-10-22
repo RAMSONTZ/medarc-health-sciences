@@ -22,6 +22,14 @@ jobs:
         run: npm ci --no-audit --no-fund
       - name: Check question bank, scoring, routes, and release integrity
         run: npm run test:all
+      - name: Audit all original questions and generate quarantine report
+        run: node scripts/audit-question-bank.mjs
+      - name: Upload question quality audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: medarc-question-bank-quality
+          path: reports/question-bank-quality.json
+          if-no-files-found: error
       - name: Compile production Next.js application
         run: npm run build
       - name: Scan production dependencies for security advisories

@@ -53,7 +53,7 @@ async def check_exam(page):
     next_link=page.get_by_role('link',name='Next question')
     if await next_link.count():
         await next_link.click()
-        await page.wait_for_url('**?question=2',timeout=30000)
+        await page.wait_for_function("new URL(window.location.href).searchParams.get('question') === '2'",timeout=30000)
         assert 'question=2' in page.url,'Exam navigation did not advance'
 
 async def check_answers(page):

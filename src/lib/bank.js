@@ -1,6 +1,7 @@
 import 'server-only';
 import fs from 'node:fs';
 import path from 'node:path';
+import {assessQuestionQuality} from './question-quality.mjs';
 
 let memo;
 export function getBank() {
@@ -20,6 +21,34 @@ export function getBank() {
   return memo;
 }
 
+/**
+ * Source preservation and student-facing quality are intentionally separate.
+ * The original 30,068 records, their IDs, answers and memberships are untouched.
+ */
+export function getQuestionQualityReport() {
+  const bank=getBank();
+  if(!bank.qualityReport) {
+    const excluded=new Set(), flagged=new Set(), categories={}, samples={};
+    for(const q of bank.questions) {
+      const result=assessQuestionQuality(q);
+      if(result.status==='quarantined')excluded.add(q.id);
+      if(result.status==='review')flagged.add(q.id);
+      for(const reason of result.reasons) {
+        categories[reason]=(categories[reason]||0)+1;
+        if(!samples[reason])samples[reason]=[];
+        if(samples[reason].length<8)samples[reason].push(q.id);
+      }
+    }
+    bank.qualityReport={
+      total:bank.questions.length,
+      available:bank.questions.length-excluded.size,
+      quarantined:excluded.size,
+      flaggedForReview:flagged.size,
+      excluded,flagged,categories,samples
+    };
+  }
+  return bank.qualityReport;
+}
 export function getStats() {
   const b = getBank();
   return { questions: b.questions.length, exams: b.exams.length, answered: Object.keys(b.answers || {}).length };
@@ -38,6 +67,7 @@ function malformedLearningRecord(q) {
 }
 export function getQuestions(params = {}, answeredOnly = false, subjectLock = '') {
   const b=getBank();
+  const excluded=getQuestionQualityReport().excluded;
   const subject = subjectLock || stringParam(params.subject);
   const topic = stringParam(params.topic);
   const type = stringParam(params.type);
@@ -47,6 +77,7 @@ export function getQuestions(params = {}, answeredOnly = false, subjectLock = ''
   const limit = 10;
   const matched=[];
   for (const q of b.questions) {
+    if(excluded.has(q.id))continue;
     const hasAnswer=Boolean(b.answers[q.id]);
     if (malformedLearningRecord(q)) continue;
     if (answeredOnly && !hasAnswer) continue;
@@ -71,22 +102,28 @@ export function getQuestions(params = {}, answeredOnly = false, subjectLock = ''
   if(subject) topics=[...new Set(b.questions.filter(q=>q.subject===subject).map(q=>q.topic).filter(Boolean))].sort().slice(0,300);
   return {questions,count,page:safePage,pages,topics,limit,params:{subject,topic,type,search,status}};
 }
+function examMemberships(exam,bank) {
+  const excluded=getQuestionQualityReport().excluded;
+  return (exam.questionIds||[]).filter(id=>bank.questionById.has(id)&&!excluded.has(id));
+}
 export function getExams(params={}) {
   const b=getBank(); const q=stringParam(params.q).toLowerCase(); const subject=stringParam(params.subject); const page=intParam(params.page); const limit=16;
-  const found=b.exams.filter(x=>(!subject||x.subject===subject)&&(!q||`${x.title||''} ${x.subject||''}`.toLowerCase().includes(q)));
+  const found=b.exams.filter(x=>examMemberships(x,b).length>0&&(!subject||x.subject===subject)&&(!q||`${x.title||''} ${x.subject||''}`.toLowerCase().includes(q)));
   const pages=Math.max(1,Math.ceil(found.length/limit)); const safePage=Math.min(page,pages);
-  return {exams:found.slice((safePage-1)*limit,safePage*limit).map(e=>({id:e.id,title:e.title,subject:e.subject,count:e.questionIds?.length||0})),count:found.length,page:safePage,pages};
+  return {exams:found.slice((safePage-1)*limit,safePage*limit).map(e=>({id:e.id,title:e.title,subject:e.subject,count:examMemberships(e,b).length})),count:found.length,page:safePage,pages};
 }
 export function getExam(id,position=1) {
   const b=getBank(); const exam=b.examById.get(id); if(!exam)return null;
-  const pos=Math.min(intParam(position),exam.questionIds.length||1);
-  const source=b.questionById.get(exam.questionIds[pos-1]);
+  const visibleIds=examMemberships(exam,b);
+  if(!visibleIds.length)return null;
+  const pos=Math.min(intParam(position),visibleIds.length);
+  const source=b.questionById.get(visibleIds[pos-1]);
   const q=source?{id:source.id,stem:source.stem,subject:source.subject,topic:source.topic,type:source.type,options:source.options||[],status:source.answerAuditStatus||source.status,answer:b.answers[source.id]||null}:null;
-  return {exam:{id:exam.id,title:exam.title,subject:exam.subject,total:exam.questionIds.length},question:q,pos};
+  return {exam:{id:exam.id,title:exam.title,subject:exam.subject,total:visibleIds.length},question:q,pos};
 }
 export function getAudit(pageRaw=1) {
   const b=getBank();const page=intParam(pageRaw);const limit=25;const pages=Math.ceil(b.questions.length/limit);
-  return {count:b.questions.length,page:Math.min(page,pages),pages,rows:b.questions.slice((Math.min(page,pages)-1)*limit,Math.min(page,pages)*limit).map(q=>({id:q.id,subject:q.subject,topic:q.topic,status:q.answerAuditStatus||q.status,answered:!!b.answers[q.id],flags:q.auditFlags||[]}))};
+  return {count:b.questions.length,page:Math.min(page,pages),pages,rows:b.questions.slice((Math.min(page,pages)-1)*limit,Math.min(page,pages)*limit).map(q=>({id:q.id,subject:q.subject,topic:q.topic,status:q.answerAuditStatus||q.status,answered:!!b.answers[q.id],quality:assessQuestionQuality(q).status,qualityReasons:assessQuestionQuality(q).reasons,flags:q.auditFlags||[]}))};
 }
 export function getTopicGroups(){
   const b=getBank();
