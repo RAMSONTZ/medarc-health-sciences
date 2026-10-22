@@ -31,7 +31,7 @@ async def assert_route(page, route):
     if route=='/visual-learning':
         cards=page.locator('.visual-lesson-card')
         assert await cards.count()==20,'Visual learning must contain exactly 20 linked illustrations'
-        broken=await page.locator('.visual-lesson-card img').evaluate_all('(imgs)=>imgs.filter(x=>!x.complete||x.naturalWidth===0).map(x=>x.src)')
+        broken=await page.locator('.visual-lesson-card img').evaluate_all("async (imgs)=> (await Promise.all(imgs.map(async img=>{const r=await fetch(img.src,{method:'HEAD'});return r.ok?null:img.src}))).filter(Boolean)")
         assert not broken,'Failed educational artwork: '+str(broken[:4])
 
 async def check_search(page):
