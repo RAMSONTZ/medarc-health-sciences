@@ -18,7 +18,18 @@ test('never serve the full standalone bank from /public',()=>{
   const publicFiles=walk(publicDir);
   assert.ok(!publicFiles.some(file=>/Previous_Studio\.html$/i.test(file)), 'Legacy HTML must not be publicly accessible');
   assert.ok(!publicFiles.some(file=>/bank\.json$/i.test(file)), 'Bank JSON must not be served statically');
-  assert.ok(publicFiles.every(file=>fs.statSync(file).size<1_000_000), 'Unexpected large public asset might contain full bank');
+  // A large *validated PNG* is not the private question bank. Permit only curated
+  // MedArc artwork under a bounded size, while still blocking large public data.
+  for(const file of publicFiles){
+    const size=fs.statSync(file).size;
+    if(size<1_000_000)continue;
+    const rel=path.relative(publicDir,file).replaceAll(path.sep,'/');
+    const header=fs.readFileSync(file).subarray(0,12);
+    const png=[137,80,78,71,13,10,26,10];
+    const isPng=png.every((value,index)=>header[index]===value);
+    assert.ok(rel.startsWith('medarc/')&&rel.endsWith('.png')&&isPng&&size<4_500_000,
+      'Unexpected large public asset might contain full bank: '+rel);
+  }
   assert.ok(fs.existsSync(path.join(root,'data','bank.json')), 'Private bank missing');
   assert.ok(!fs.existsSync(path.join(root,'offline-archive')), 'Legacy archive must not be shipped with the public repository');
 });
