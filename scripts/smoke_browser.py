@@ -16,7 +16,7 @@ from pathlib import Path
 from playwright.async_api import async_playwright
 
 BASE=(sys.argv[1] if len(sys.argv)>1 else 'http://localhost:3000').rstrip('/')
-ROUTES=['/','/topics','/practice','/answers','/exams','/anatomy','/review','/visual-learning']
+ROUTES=['/','/topics','/practice','/answers','/exams','/anatomy','/review','/visual-learning','/group-exams']
 VIEWPORTS=[{'width':390,'height':844}, {'width':768,'height':1024}, {'width':1440,'height':960}]
 
 async def assert_route(page, route):
