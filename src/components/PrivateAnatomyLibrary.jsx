@@ -23,7 +23,7 @@ async function indexArchive(file){
   entries.push({id:'image-'+i,path,name:path.split('/').pop(),group:groupOf(path),start,compressed,size,method});
  }
  if(!entries.length)throw Error('No image files were found. If this ZIP contains PDFs, use the converted anatomy browser ZIP.');
- return {raw,entries};
+ return {raw,entries:entries.some(x=>x.path.startsWith('preview/'))?entries.filter(x=>x.path.startsWith('preview/')):entries};
 }
 async function extract(archive,item){
  const part=new Uint8Array(archive.raw,item.start,item.compressed);
