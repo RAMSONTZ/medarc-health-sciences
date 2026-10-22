@@ -1,0 +1,32 @@
+{
+  "name": "medarc-v2",
+  "version": "2.7.1",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint:syntax": "node scripts/check-integrity.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "test:data": "node scripts/check-integrity.mjs && node scripts/test-data-routes.mjs",
+    "test:all": "npm run test && npm run test:data && npm run audit:answers",
+    "audit:answers": "node scripts/audit-answer-quality.mjs",
+    "test:release": "node --test tests/*.test.mjs",
+    "test:browser": "python scripts/smoke_browser.py http://localhost:3000",
+    "test:anatomy-browser": "python scripts/test_offline_practical.py",
+    "test:anatomy-image": "python -m unittest discover -s tests -p test_anatomy_image_pipeline.py -v",
+    "postinstall": "node scripts/restore-bank.mjs"
+  },
+  "dependencies": {
+    "next": "15.5.28",
+    "react": "19.1.10",
+    "react-dom": "19.1.10"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "type": "module",
+  "overrides": {
+    "postcss": "^8.5.23"
+  }
+}

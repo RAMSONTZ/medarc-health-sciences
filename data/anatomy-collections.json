@@ -1,0 +1,174 @@
+{
+  "schemaVersion": 2,
+  "status": "public_syllabus_no_restricted_media",
+  "collections": [
+    {
+      "id": "abdominal-wall-peritoneum-and-intestines",
+      "title": "Abdominal Wall, Peritoneum and Intestines",
+      "bodyRegion": "Abdomen & urinary",
+      "status": "awaiting-reviewed-media"
+    },
+    {
+      "id": "anterior-neck",
+      "title": "Anterior Neck",
+      "bodyRegion": "Head & neck",
+      "status": "awaiting-reviewed-media"
+    },
+    {
+      "id": "bones-joints-and-movement",
+      "title": "Bones Joints and Movement",
+      "bodyRegion": "General anatomy",
+      "status": "awaiting-reviewed-media"
+    },
+    {
+      "id": "brachial-plexus",
+      "title": "Brachial Plexus",
+      "bodyRegion": "Upper limb & plexuses",
+      "status": "awaiting-reviewed-media"
+    },
+    {
+      "id": "cranial-cavity-venous-sinuses-and-brain",
+      "title": "Cranial Cavity, Venous Sinuses and Brain",
+      "bodyRegion": "Neuroanatomy & spine",
+      "status": "awaiting-reviewed-media"
+    },
+    {
+      "id": "deep-back-and-spinal-cord",
+      "title": "Deep Back and Spinal Cord",
+      "bodyRegion": "Neuroanatomy & spine",
+      "status": "awaiting-reviewed-media"
+    },
+    {
+      "id": "face",
+      "title": "Face",
+      "bodyRegion": "Head & neck",
+      "status": "awaiting-reviewed-media"
+    },
+    {
+      "id": "heart",
+      "title": "Heart",
+      "bodyRegion": "Thorax",
+      "status": "awaiting-reviewed-media"
+    },
+    {
+      "id": "infratemporal-fossa",
+      "title": "Infratemporal Fossa",
+      "bodyRegion": "Head & neck",
+      "status": "awaiting-reviewed-media"
+    },
+    {
+      "id": "kidneys-and-urinary-system",
+      "title": "Kidneys and Urinary System",
+      "bodyRegion": "Abdomen & urinary",
+      "status": "awaiting-reviewed-media"
+    },
+    {
+      "id": "lumbar-spine-hip-and-knee",
+      "title": "Lumbar Spine, Hip and Knee",
+      "bodyRegion": "Limbs & joints",
+      "status": "awaiting-reviewed-media"
+    },
+    {
+      "id": "lungs-and-ventilation-pathway",
+      "title": "Lungs and Ventilation Pathway",
+      "bodyRegion": "Thorax",
+      "status": "awaiting-reviewed-media"
+    },
+    {
+      "id": "mastication",
+      "title": "Mastication",
+      "bodyRegion": "Head & neck",
+      "status": "awaiting-reviewed-media"
+    },
+    {
+      "id": "nasal-cavity-sinuses-and-ear",
+      "title": "Nasal Cavity, Sinuses and Ear",
+      "bodyRegion": "Head & neck",
+      "status": "awaiting-reviewed-media"
+    },
+    {
+      "id": "oral-cavity",
+      "title": "Oral Cavity",
+      "bodyRegion": "Head & neck",
+      "status": "awaiting-reviewed-media"
+    },
+    {
+      "id": "orbit-and-cavernous-sinus",
+      "title": "Orbit and Cavernous Sinus",
+      "bodyRegion": "Head & neck",
+      "status": "awaiting-reviewed-media"
+    },
+    {
+      "id": "overview-of-lower-limb",
+      "title": "Overview of Lower Limb",
+      "bodyRegion": "Limbs & joints",
+      "status": "awaiting-reviewed-media"
+    },
+    {
+      "id": "overview-of-upper-limb",
+      "title": "Overview of Upper Limb",
+      "bodyRegion": "Upper limb & plexuses",
+      "status": "awaiting-reviewed-media"
+    },
+    {
+      "id": "parotid-gland-and-submandibular-triangle",
+      "title": "Parotid Gland and Submandibular Triangle",
+      "bodyRegion": "Head & neck",
+      "status": "awaiting-reviewed-media"
+    },
+    {
+      "id": "pelvic-cavity",
+      "title": "Pelvic Cavity",
+      "bodyRegion": "Pelvis & perineum",
+      "status": "awaiting-reviewed-media"
+    },
+    {
+      "id": "perineum",
+      "title": "Perineum",
+      "bodyRegion": "Pelvis & perineum",
+      "status": "awaiting-reviewed-media"
+    },
+    {
+      "id": "posterior-mediastinum",
+      "title": "Posterior Mediastinum",
+      "bodyRegion": "Thorax",
+      "status": "awaiting-reviewed-media"
+    },
+    {
+      "id": "posterior-neck",
+      "title": "Posterior Neck",
+      "bodyRegion": "Head & neck",
+      "status": "awaiting-reviewed-media"
+    },
+    {
+      "id": "pterygopalatine-fossa-and-palate",
+      "title": "Pterygopalatine Fossa and Palate",
+      "bodyRegion": "Head & neck",
+      "status": "awaiting-reviewed-media"
+    },
+    {
+      "id": "shoulder",
+      "title": "Shoulder",
+      "bodyRegion": "Upper limb & plexuses",
+      "status": "awaiting-reviewed-media"
+    },
+    {
+      "id": "stomach-liver-and-spleen",
+      "title": "Stomach, Liver and Spleen",
+      "bodyRegion": "Abdomen & urinary",
+      "status": "awaiting-reviewed-media"
+    },
+    {
+      "id": "superior-mediastinum-and-root-of-neck",
+      "title": "Superior Mediastinum and Root of Neck",
+      "bodyRegion": "Thorax",
+      "status": "awaiting-reviewed-media"
+    },
+    {
+      "id": "wrist-hand-and-foot",
+      "title": "Wrist, Hand and Foot",
+      "bodyRegion": "Limbs & joints",
+      "status": "awaiting-reviewed-media"
+    }
+  ]
+}

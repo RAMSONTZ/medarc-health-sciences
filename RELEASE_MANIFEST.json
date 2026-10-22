@@ -1,0 +1,21 @@
+{
+  "release": "MedArc V2.7 \u2014 public-source candidate",
+  "date": "2026-10-21",
+  "sourceQuestionCount": 30068,
+  "examCollections": 1201,
+  "examMemberships": 54926,
+  "provisionalPreparedAnswers": 2325,
+  "clinicallyVerifiedAnswers": 0,
+  "anatomyTopicCollections": 28,
+  "publicAnatomyImages": 0,
+  "originalThirdPartyImageFilesPublished": 0,
+  "privateAnatomyReviewFilesIncluded": false,
+  "npmInstall": "blocked: EAI_AGAIN registry.npmjs.org",
+  "productionNextBuild": "not run (npm unavailable)",
+  "githubRepository": "not created: connected GitHub actions do not support create repository",
+  "vercelDeployment": "not created: no connected team or project returned",
+  "primaryTests": "passed",
+  "imageTests": "passed",
+  "publicationApproval": "pending distribution rights and clinical review",
+  "bankSha256": "eabe9041576475021ea2ef8ba747bab515ac4d023458d6fd55729e1fe19b038c"
+}

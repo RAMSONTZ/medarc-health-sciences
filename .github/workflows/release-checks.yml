@@ -1,0 +1,57 @@
+name: MedArc production-build and browser QA
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          registry-url: https://registry.npmjs.org
+      - name: Install pinned dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Check question bank, scoring, routes, and release integrity
+        run: npm run test:all
+      - name: Compile production Next.js application
+        run: npm run build
+      - name: Scan production dependencies for security advisories
+        run: npm audit --omit=dev --audit-level=high
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install browser acceptance dependencies
+        run: |
+          python -m pip install playwright==1.55.0
+          python -m playwright install --with-deps chromium
+      - name: Start built Next.js server
+        run: |
+          npm run start > next-server.log 2>&1 &
+          echo $! > next-server.pid
+      - name: Wait for local server
+        run: |
+          for i in $(seq 1 60); do
+            if curl --silent --fail http://localhost:3000/ > /dev/null; then exit 0; fi
+            sleep 2
+          done
+          echo 'Next.js server did not become ready.'
+          cat next-server.log
+          exit 1
+      - name: Exercise mobile, tablet, and desktop routes and interactions
+        run: python scripts/smoke_browser.py http://localhost:3000
+      - name: Upload diagnostic build logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: medarc-qa-logs
+          path: next-server.log
+          if-no-files-found: ignore

@@ -1,0 +1,27 @@
+.next
+node_modules
+.env*
+.DS_Store
+npm-debug.log*
+
+# Private original images and third-party image rights evidence must not be published.
+/anatomy-intake/images/*
+/anatomy-intake/permission-evidence/*
+!/anatomy-intake/images/.gitkeep
+!/anatomy-intake/permission-evidence/.gitkeep
+/anatomy-catalog/*
+/public/anatomy/*
+!/public/anatomy/.gitkeep
+
+# CRITICAL: all extracted review images, contact sheets, private rights paperwork
+/anatomy-intake/private-review/
+/anatomy-intake/body-regions/
+/anatomy-catalog/private-*
+
+__pycache__/
+*.pyc
+.vercel/
+qa-artifacts/
+
+# Losslessly restored from verified compressed source by postinstall
+/data/bank.json

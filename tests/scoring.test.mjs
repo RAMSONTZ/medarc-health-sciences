@@ -1,0 +1,25 @@
+import assert from 'node:assert/strict';
+import {test} from 'node:test';
+import {evaluateAnswer} from '../src/lib/scoring.js';
+
+test('single-response answers match or differ from a prepared draft key',()=>{
+  assert.deepEqual(evaluateAnswer({correct:'B'},'B'),{status:'matches_prepared_key',matches:true});
+  assert.deepEqual(evaluateAnswer({correct:'B'},'D'),{status:'differs_from_prepared_key',matches:false});
+});
+test('unanswered questions are never graded',()=>{
+  assert.deepEqual(evaluateAnswer(null,'A'),{status:'unscored',matches:null});
+  assert.deepEqual(evaluateAnswer({},'A'),{status:'unscored',matches:null});
+});
+test('multiple-response order cannot change the outcome',()=>{
+  const a={correct:['A','C']};
+  assert.equal(evaluateAnswer(a,['C','A'],{multiple:true}).matches,true);
+  assert.equal(evaluateAnswer(a,['A'],{multiple:true}).matches,false);
+  assert.equal(evaluateAnswer(a,['A','B'],{multiple:true}).matches,false);
+  assert.equal(evaluateAnswer(a,['A','A','C'],{multiple:true}).matches,false);
+});
+test('multi-response questions without a multi-response key are unscored',()=>{
+  assert.equal(evaluateAnswer({correct:'A'},['A'],{multiple:true}).status,'unscored');
+});
+test('written questions are self-assessed and not auto-graded',()=>{
+  assert.deepEqual(evaluateAnswer({answerText:'Mitral valve'},'Mitral valve',{written:true}),{status:'self_assess',matches:null});
+});
