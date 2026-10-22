@@ -1,0 +1,33 @@
+name: MedArc release verification
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install and restore question bank
+        run: npm ci --no-audit --no-fund
+      - name: Test source integrity, scoring safety, visuals and production build
+        run: |
+          npm run test
+          npm run test:data
+          npm run build
+      - name: Install browser test dependencies
+        run: |
+          python -m pip install playwright==1.56.0
+          python -m playwright install --with-deps chromium
+      - name: Verify desktop tablet and mobile routes
+        run: |
+          npm run start >/tmp/medarc-server.log 2>&1 &
+          sleep 4
+          python scripts/smoke_browser.py http://127.0.0.1:3000
