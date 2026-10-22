@@ -16,7 +16,7 @@ from pathlib import Path
 from playwright.async_api import async_playwright
 
 BASE=(sys.argv[1] if len(sys.argv)>1 else 'http://localhost:3000').rstrip('/')
-ROUTES=['/','/topics','/practice','/answers','/exams','/anatomy','/review']
+ROUTES=['/','/topics','/practice','/answers','/exams','/anatomy','/review','/visual-learning']
 VIEWPORTS=[{'width':390,'height':844}, {'width':768,'height':1024}, {'width':1440,'height':960}]
 
 async def assert_route(page, route):
@@ -28,6 +28,11 @@ async def assert_route(page, route):
     assert overflow<=2,(route,'horizontal overflow',overflow)
     heading=page.locator('h1').first
     assert await heading.count(),f'Missing page heading {route}'
+    if route=='/visual-learning':
+        cards=page.locator('.visual-lesson-card')
+        assert await cards.count()==20,'Visual learning must contain exactly 20 linked illustrations'
+        broken=await page.locator('.visual-lesson-card img').evaluate_all('(imgs)=>imgs.filter(x=>!x.complete||x.naturalWidth===0).map(x=>x.src)')
+        assert not broken,'Failed educational artwork: '+str(broken[:4])
 
 async def check_search(page):
     await page.goto(BASE,wait_until='domcontentloaded')
