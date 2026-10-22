@@ -104,9 +104,30 @@ const TOPICS={
 };
 const badTopic=/^(?:Unassigned topic|Department review required|Unclassified|unknown|Miscellaneous|None|N\/A|Other)$/i;
 const TOPIC_ALIASES={
- [S.ANATOMY]:{'Head & Neck':'Head and Neck','Histology and Tissues':null},
- [S.PHARMA]:{'CNS Pharmacology · Suggested':'CNS Pharmacology','General Pharmacology · Suggested':'General Pharmacology'},
- [S.PARA]:{'Medical Parasitology':null}
+ [S.ANATOMY]:{
+  'Head & Neck':'Head and Neck','Upper Limb · Suggested':'Upper Limb','Lower Limb · Suggested':'Lower Limb',
+  'Head and Neck · Suggested':'Head and Neck','Brachial Plexus · Suggested':'Upper Limb',
+  'Thoracic Wall and Mediastinum · Suggested':'Thorax','Thoracic Wall and Ribs':'Thorax',
+  'Cardiovascular Anatomy':'Thorax','Heart and Coronary Vessels · Suggested':'Thorax',
+  'Diaphragm':'Thorax','Lungs and Pleura':'Thorax','Mediastinum':'Thorax',
+  'Abdomen and GI Anatomy · Suggested':'Abdomen','Pelvis and Perineum · Suggested':'Pelvis and Perineum',
+  'Neuroanatomy · Suggested':'Neuroanatomy',
+  'Histology and Tissues':'Topic review required','Embryological Development':'Topic review required'
+ },
+ [S.PHARMA]:{
+  'CNS Pharmacology · Suggested':'CNS Pharmacology',
+  'Central Nervous System Drugs':'CNS Pharmacology','Neurology':'CNS Pharmacology',
+  'General Pharmacology · Suggested':'General Pharmacology',
+  'Pharmacokinetics and Dynamics · Suggested':'General Pharmacology',
+  'Antimicrobials':'Antimicrobial Pharmacology','Antimicrobials · Suggested':'Antimicrobial Pharmacology',
+  'Cardiovascular Drugs':'Cardiovascular Pharmacology','Cardiovascular Drugs · Suggested':'Cardiovascular Pharmacology',
+  'Cardiovascular':'Cardiovascular Pharmacology','Autonomic Pharmacology · Suggested':'Autonomic Pharmacology',
+  'Endocrine Pharmacology · Suggested':'Endocrine Pharmacology','Endocrinology':'Endocrine Pharmacology',
+  'Respiratory':'Respiratory Pharmacology','Gastrointestinal':'Gastrointestinal Pharmacology',
+  'Renal and Urinary':'Renal Pharmacology'
+ },
+ [S.INT]:{'Respiratory':'Respiratory Medicine','Cardiovascular':'Cardiology','Renal and Urinary':'Nephrology'},
+ [S.PARA]:{'Medical Parasitology':'General Parasitology'}
 };
 const CONTAMINATED=/\b(?:HYPERLINK|INCLUDEPICTURE|MERGEFORMAT|\\insrsid|\\charrsid|[{}]\\f\d+)\b/i;
 /**
@@ -171,10 +192,27 @@ export function curateQuestion(question){
  const matches=TOPICS[subject]||[];
  const hits=matches.filter(([,pattern])=>pattern.test(actualQuestion));
  if(hits.length===1){topic=hits[0][0];}
- else if(hits.length>1){const mapped=matches.find(([label])=>label===original);if(mapped)topic=original;else{topic=hits[0][0];review=true;topicReason='multiple_matching_topics';}}
+ else if(hits.length>1){
+   const hinted=(TOPIC_ALIASES[subject]||{})[original]||original;
+   const mapped=matches.find(([label])=>label===hinted);
+   if(mapped)topic=mapped[0];
+   else{topic=hits[0][0];review=true;topicReason='multiple_matching_topics';}
+ }
+ // When the isolated question contains no recognizable topic clues,
+ // inspect context. Multiple disease signals are review-only.
+ if(!topic && matches.length && full!==actualQuestion){
+   const whole=matches.filter(([,pattern])=>pattern.test(full));
+   if(whole.length===1){topic=whole[0][0];topicReason='context_topic_evidence';}
+   else if(whole.length>1){
+     const hinted=(TOPIC_ALIASES[subject]||{})[original]||original;
+     const originalMatch=whole.find(([label])=>label===hinted);
+     if(originalMatch){topic=originalMatch[0];topicReason='source_and_context_agree';}
+   }
+ }
  if(!topic && same && !badTopic.test(original) && original){
     topic=(TOPIC_ALIASES[subject]||{})[original]===undefined?original:(TOPIC_ALIASES[subject]||{})[original];
     if(topic)topicReason='preserved_source_topic';
+    if(original==='Medical Parasitology'){review=true;topicReason='broad_parasitology_category_needs_subtopic_review';}
  }
  if(!topic){
   topic='Topic review required';review=true;topicReason='unresolved_topic';
