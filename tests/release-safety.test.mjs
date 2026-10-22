@@ -23,7 +23,8 @@ test('never serve the full standalone bank from /public',()=>{
     if(size<1_000_000)return true;
     // Only the two newly generated student-group PNG hero images may exceed 1 MB.
     // Keep every other large public file disallowed to prevent exposing the bank.
-    if(!/[/\\\\]public[/\\\\]medarc[/\\\\]hero-(standing|discussion)-group\\.png$/i.test(file)||size>5_000_000)return false;
+    const approvedHero=['hero-standing-group.png','hero-discussion-group.png'].some(name=>file===path.join(publicDir,'medarc',name));
+    if(!approvedHero||size>5_000_000)return false;
     const bytes=fs.readFileSync(file).subarray(0,8);
     return bytes.equals(Buffer.from([137,80,78,71,13,10,26,10]));
   }), 'Unexpected large public asset might contain full bank');
