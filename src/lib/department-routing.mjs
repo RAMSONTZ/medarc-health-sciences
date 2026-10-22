@@ -59,6 +59,7 @@ function sensibleTopic(subject,stem){
   if(RX.cardiovascular.test(stem))return 'Cardiovascular medicine';
   if(RX.endocrine.test(stem))return 'Endocrinology';
  }
+ if(subject==='Human Physiology')return 'Physiological mechanisms and transport';
  if(subject==='Pharmacology')return 'Drug action and therapeutics';
  if(subject==='Neurology')return 'Neurological disorders';
  if(subject==='Obstetrics and Gynecology')return 'Obstetric and gynecological care';
