@@ -18,7 +18,15 @@ test('never serve the full standalone bank from /public',()=>{
   const publicFiles=walk(publicDir);
   assert.ok(!publicFiles.some(file=>/Previous_Studio\.html$/i.test(file)), 'Legacy HTML must not be publicly accessible');
   assert.ok(!publicFiles.some(file=>/bank\.json$/i.test(file)), 'Bank JSON must not be served statically');
-  assert.ok(publicFiles.every(file=>fs.statSync(file).size<1_000_000), 'Unexpected large public asset might contain full bank');
+  assert.ok(publicFiles.every(file=>{
+    const size=fs.statSync(file).size;
+    if(size<1_000_000)return true;
+    // Only the two newly generated student-group PNG hero images may exceed 1 MB.
+    // Keep every other large public file disallowed to prevent exposing the bank.
+    if(!/[/\\\\]public[/\\\\]medarc[/\\\\]hero-(standing|discussion)-group\\.png$/i.test(file)||size>5_000_000)return false;
+    const bytes=fs.readFileSync(file).subarray(0,8);
+    return bytes.equals(Buffer.from([137,80,78,71,13,10,26,10]));
+  }), 'Unexpected large public asset might contain full bank');
   assert.ok(fs.existsSync(path.join(root,'data','bank.json')), 'Private bank missing');
   assert.ok(!fs.existsSync(path.join(root,'offline-archive')), 'Legacy archive must not be shipped with the public repository');
 });
