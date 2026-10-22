@@ -48,7 +48,6 @@ export function getQuestions(params = {}, answeredOnly = false, subjectLock = ''
   const limit = 10;
   const matched=[];
   for (const q of b.questions) {
-    if(!isStudyableQuestion(q))continue;
     const hasAnswer=Boolean(b.answers[q.id]);
     if (answeredOnly && !hasAnswer) continue;
     if (subject && q.subject !== subject) continue;
@@ -64,8 +63,11 @@ export function getQuestions(params = {}, answeredOnly = false, subjectLock = ''
   const pages=Math.max(1,Math.ceil(count/limit));
   const safePage=Math.min(page,pages);
   const questions=matched.slice((safePage-1)*limit,safePage*limit).map(q=>({
-    id:q.id, stem:q.stem, subject:q.subject, topic:q.topic, type:q.type,
-    options:q.options||[], status:q.answerAuditStatus||q.status,
+    id:q.id,
+    stem:isStudyableQuestion(q)?q.stem:'Source text needs review — this imported record cannot be displayed safely as a medical learning question.',
+    sourceUnreadable:!isStudyableQuestion(q),
+    subject:q.subject, topic:q.topic, type:q.type,
+    options:isStudyableQuestion(q)?(q.options||[]):[], status:q.answerAuditStatus||q.status,
     priority:q.priority, answer:b.answers[q.id]||null
   }));
   let topics=[];
@@ -81,9 +83,8 @@ export function getExams(params={}) {
 export function getExam(id,position=1) {
   const b=getBank(); const exam=b.examById.get(id); if(!exam)return null;
   const pos=Math.min(intParam(position),exam.questionIds.length||1);
-  const candidate=b.questionById.get(exam.questionIds[pos-1]);
-  const source=isStudyableQuestion(candidate)?candidate:null;
-  const q=source?{id:source.id,stem:source.stem,subject:source.subject,topic:source.topic,type:source.type,options:source.options||[],status:source.answerAuditStatus||source.status,answer:b.answers[source.id]||null}:null;
+  const source=b.questionById.get(exam.questionIds[pos-1]);
+  const q=source?{id:source.id,stem:isStudyableQuestion(source)?source.stem:'Source text needs review — this imported record cannot be displayed safely as a medical learning question.',sourceUnreadable:!isStudyableQuestion(source),subject:source.subject,topic:source.topic,type:source.type,options:isStudyableQuestion(source)?(source.options||[]):[],status:source.answerAuditStatus||source.status,answer:b.answers[source.id]||null}:null;
   return {exam:{id:exam.id,title:exam.title,subject:exam.subject,total:exam.questionIds.length},question:q,pos};
 }
 export function getAudit(pageRaw=1) {

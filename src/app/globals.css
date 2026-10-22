@@ -452,3 +452,18 @@ html[data-practice-focus='true'] .medarc-focus-toolbar{position:sticky;top:0;z-i
  .medarc-focus-toolbar{flex-wrap:wrap}
 }
 @media(max-width:390px){.medarc-feature-grid{grid-template-columns:1fr}.medarc-welcome-copy{padding-bottom:230px}.medarc-gallery-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Individual rights-cleared WebP illustrations: never crop one sheet across cards. */
+.medarc-scene{display:block;width:100%;height:100%;object-fit:contain;object-position:center;background-image:none!important;filter:none}
+.medarc-feature-thumb .medarc-scene{object-fit:contain}
+.medarc-gallery-tile .medarc-scene{width:100%;object-fit:contain;background:#edf5fc}
+html[data-theme='dark'] .medarc-gallery-tile .medarc-scene{background:#1d3853}
+.medarc-feedback-heading .feedback-visual{height:90px;width:108px;object-fit:contain;flex:none}
+.medarc-quarantine{border-left:4px solid #d5a054}
+.medarc-quarantine>p{max-width:720px;line-height:1.7;color:var(--muted)}
+.topic-hero-photo{display:grid;place-items:end center;background:none;mask-image:none;overflow:hidden}
+.topic-hero-photo img{width:100%;height:100%;max-height:330px;object-fit:contain;object-position:bottom}
+html[data-theme='dark'] .topic-hero-photo{background:#162e47}
+html[data-theme='dark'] .mva-feedback,html[data-theme='dark'] .ap-feedback{background:#1f3850;border-color:#55738e;color:#ecf5ff}
+html[data-theme='dark'] .mva-feedback p,html[data-theme='dark'] .ap-feedback p{color:#e9f4ff}
+html[data-theme='dark'] .mva-feedback b,html[data-theme='dark'] .ap-feedback strong{color:#eff7ff}

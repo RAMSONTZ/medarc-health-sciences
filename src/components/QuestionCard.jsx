@@ -93,6 +93,7 @@ export function QuestionCard({question,index=1,compact=false}) {
   const optionMap=Object.fromEntries(options.map(o=>[o.label,o.text]));
   const presentedCorrect=Array.isArray(key)?key.join(', '):key;
 
+  if(question.sourceUnreadable)return <article className="question-card medarc-quarantine" aria-labelledby={`stem-${id}`}><div className="question-heading"><div className="question-index">Q{index}</div><span className="question-state pending">Source review required</span></div><h3 className="question-stem" id={`stem-${id}`}>{question.stem}</h3><p>This imported document contains formatting or encoding defects. To prevent misleading study material, its original text and answer options are not shown here. The source record is retained unchanged for audit and correction.</p><div className="question-bottom">Record ID · {id} <span>Not available for grading</span></div></article>;
   return <article className={`question-card ${compact?'question-compact':''}`} aria-labelledby={`stem-${id}`}>
     <div className="question-heading">
       <div className="question-index">Q{index}</div>
