@@ -91,6 +91,7 @@ export function QuestionCard({question,index=1,compact=false}) {
   const isRight=evaluateAnswer(answer,choice,{written:isWritten,multiple:isMultiple}).matches===true;
   const optionMap=Object.fromEntries(options.map(o=>[o.label,o.text]));
   const presentedCorrect=Array.isArray(key)?key.join(', '):key;
+  const feedbackImage=!hasKey?'20_motivation_you_can_do_it':isRight?'16_positive_feedback_good_work':'18_motivation_dont_give_up';
 
   return <article className={`question-card ${compact?'question-compact':''}`} aria-labelledby={`stem-${id}`}>
     <div className="question-heading">
@@ -115,7 +116,7 @@ export function QuestionCard({question,index=1,compact=false}) {
       {!isMultiple&&choice&&<div className="question-controls"><button className="question-reset" type="button" onClick={reset}>Try again</button></div>}
     </>}
     {storageReady&&checked&&!isWritten&&<div role="status" aria-live="polite" className={`answer-feedback ${hasKey?(isRight?'is-correct':'is-incorrect'):'is-pending'}`}>
-      <div className="feedback-intro"><Icon name={hasKey&&isRight?'check':'shield'} size={17}/><b>{hasKey?(isRight?'Matches the prepared answer':'Different from the prepared answer'):'Response saved — not graded'}</b></div>
+      <div className="medarc-feedback-heading"><img className="medarc-feedback-image" src={'/medarc/visuals/'+feedbackImage+'.webp'} alt="" aria-hidden="true" loading="lazy" width="90" height="100"/><div><div className="feedback-intro"><Icon name={hasKey&&isRight?'check':'shield'} size={17}/><b>{hasKey?(isRight?'Matches the prepared answer':'Different from the prepared answer'):'Response saved — not graded'}</b></div><p className="medarc-feedback-motivation">{!hasKey?'Keep studying. Your effort matters.':isRight?'Good effort. Check the explanation to strengthen your reasoning.':'Keep going. Revisit the explanation and try again.'}</p></div></div>
       {hasKey?<><p>Provisional answer: <strong>{presentedCorrect}</strong>{!Array.isArray(key)&&optionMap[key]?` — ${optionMap[key]}`:''}</p><Explanation answer={answer}/></>:<p>This question does not yet have a usable answer key and is not scored.</p>}
     </div>}
     {isWritten&&reveal&&<div className="answer-feedback is-pending" role="status">{answer?<Explanation answer={answer}/>:<p>A model answer has not yet been prepared for this question.</p>}</div>}
