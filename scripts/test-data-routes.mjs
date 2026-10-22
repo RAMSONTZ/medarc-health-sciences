@@ -7,7 +7,8 @@ import {pathToFileURL} from 'node:url';
 // Next.js-only server-only marker; no mocked question records are used.
 const source=fs.readFileSync(path.join(process.cwd(),'src/lib/bank.js'),'utf8')
   .replace(/^import 'server-only';\s*/m,'')
-  .replace("from './question-quality.mjs';", "from '"+pathToFileURL(path.join(process.cwd(),'src/lib/question-quality.mjs')).href+"';");
+  .replace("from './question-quality.mjs';", "from '"+pathToFileURL(path.join(process.cwd(),'src/lib/question-quality.mjs')).href+"';")
+  .replace("from './department-routing.mjs';", "from '"+pathToFileURL(path.join(process.cwd(),'src/lib/department-routing.mjs')).href+"';");
 const lib=await import(`data:text/javascript;base64,${Buffer.from(source).toString('base64')}`);
 const bank=lib.getBank();
 const expected=lib.getStats();
