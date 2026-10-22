@@ -8,6 +8,7 @@ import {SmartSearch} from './SmartSearch';
 const sections=[
  {href:'/',label:'Overview',icon:'home'},
  {href:'/topics',label:'Explore subjects',icon:'grid'},
+ {href:'/visual-learning',label:'Visual learning',icon:'layers'},
  {href:'/practice',label:'Question practice',icon:'book'},
  {href:'/answers',label:'Answers + explanations',icon:'check'},
  {href:'/exams',label:'Exam collections',icon:'clipboard'},
