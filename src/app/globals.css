@@ -258,3 +258,98 @@ html[data-theme='dark'] .ap-stage-actions select{background:var(--paper);color:v
 @media(min-width:1500px){.mva-regions{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:1100px){.mva-regions{grid-template-columns:1fr 1fr}.mva-region{grid-template-columns:1fr;min-height:0}.mva-region-photo img{height:180px;min-height:0}.mva-study{grid-template-columns:1fr}.mva-topics,.mva-pictures{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:680px){.mva{padding:16px}.mva-heading{display:block}.mva-count{display:inline-block;margin-top:13px}.mva-regions{grid-template-columns:1fr}.mva-region{grid-template-columns:40% 60%;min-height:155px}.mva-region-photo img{height:100%;min-height:155px}.mva-region-text{padding:13px}.mva-region-text h3{font-size:16px;margin:7px 0}.mva-region-text p{font-size:11px}.mva-region-text strong{margin-top:10px}.mva-topics,.mva-pictures{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.mva-topic>img,.mva-picture-frame{height:130px}.mva-topic>div,.mva-picture-description{padding:12px}.mva-topic h3,.mva-picture-description h3{font-size:12px}.mva-section-title{align-items:start}.mva-back{padding:8px;font-size:11px}.mva-study-image{min-height:220px}.mva-assessment{padding:15px}.mva-supplement-body{padding:10px}}
+
+
+
+/* MedArc student-first photography and visual learning — October 2026.
+   Decorative AI-generated cutouts; diagnostic images remain separately verified. */
+.medarc-students-hero{background:radial-gradient(circle at 76% 27%,#e5f4ff 0%,#f9fcff 47%,#f1f6fb 85%);border:1px solid #dfeaf4;color:var(--navy);min-height:380px;isolation:isolate}
+.medarc-students-hero .hero-copy{padding:46px 14px 48px 43px;max-width:56%;z-index:2}
+.medarc-students-hero .hero-kicker{color:var(--teal);letter-spacing:1.65px}
+.medarc-students-hero .hero-copy h2{font-size:clamp(32px,3.4vw,46px);color:var(--navy);letter-spacing:-1.8px;line-height:1.2}
+.medarc-students-hero .hero-copy h2 em{color:var(--blue)}
+.medarc-students-hero .hero-copy p{color:#556b80;font-size:12.5px;line-height:1.85;max-width:420px}
+.medarc-students-hero .hero-text-link{color:var(--blue);white-space:normal}
+.medarc-students-hero .hero-actions{gap:16px;flex-wrap:wrap}
+.hero-students-img{position:absolute;right:0;bottom:0;width:53%;height:96%;object-fit:contain;object-position:bottom right;z-index:1;filter:drop-shadow(0 12px 15px rgba(29,65,101,.06))}
+.hero-students-caption{position:absolute;right:22px;top:22px;z-index:2;font-size:8px;letter-spacing:1.1px;color:#72889b;font-weight:800}
+.medarc-collab-panel{background:var(--paper);border:1px solid var(--line);border-radius:15px;display:grid;grid-template-columns:1fr .98fr;overflow:hidden;min-height:265px;margin-top:24px}
+.medarc-collab-photo{background:radial-gradient(circle at 50% 55%,#edf7fd,#f9fcff);position:relative;min-width:0;display:flex;justify-content:center;align-items:end;overflow:hidden}
+.medarc-collab-photo img{width:100%;height:100%;max-height:310px;object-fit:contain;object-position:center bottom;display:block}
+.medarc-collab-copy{padding:33px clamp(22px,4vw,48px);display:flex;justify-content:center;flex-direction:column;align-items:flex-start}
+.medarc-collab-copy h2{font:800 clamp(20px,2.4vw,29px)/1.3 var(--font-heading);letter-spacing:-.7px;margin:13px 0;color:var(--navy)}
+.medarc-collab-copy p{font-size:12px;line-height:1.8;color:var(--muted);max-width:390px;margin:0 0 17px}
+.home-visual-preview{margin:18px 0 28px}
+.home-visual-trio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.home-visual-tile{border:1px solid var(--line);border-radius:12px;background:var(--paper);display:flex;flex-direction:column;align-items:center;text-align:center;padding:11px 12px 16px;transition:transform .18s,box-shadow .18s;min-width:0}
+.home-visual-tile:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.home-visual-tile img{object-fit:contain;display:block;width:100%;height:155px;max-width:240px}
+.home-visual-tile b{font:800 13px var(--font-heading);color:var(--navy);margin:7px 0}
+.home-visual-tile span{font-size:10px;font-weight:800;color:var(--blue)}
+.medarc-topic-photo{background:radial-gradient(circle at 60% 68%,#dcebf7,#bad8ef);mask-image:none;display:flex;align-items:end;justify-content:end;overflow:hidden}
+.medarc-topic-photo img{display:block;object-fit:contain;object-position:center bottom;height:100%;width:100%;max-height:300px}
+.sidebar-photo{background-image:linear-gradient(180deg,rgba(8,28,54,.04) 8%,rgba(7,28,47,.95) 100%),url('/medarc/hero-standing-group.png');background-color:#e4eff9;background-size:cover,contain;background-position:center,bottom center;background-repeat:no-repeat}
+.photo-editorial-image{background-image:url('/medarc/hero-discussion-group.png');background-color:#214b70;background-position:center bottom;background-size:contain;background-repeat:no-repeat}
+.medarc-feedback-heading{display:flex;gap:14px;align-items:center}
+.medarc-feedback-image{object-fit:contain;width:86px;height:90px;flex:0 0 86px}
+.medarc-feedback-motivation{color:var(--muted);line-height:1.6;font-weight:600;font-size:11px;margin:7px 0 0}
+.visual-learning-header{display:grid;grid-template-columns:1fr .93fr;gap:8px;align-items:center;min-height:300px;overflow:hidden;border-radius:15px;border:1px solid var(--line);background:linear-gradient(125deg,#fff,#eff7ff)}
+.visual-learning-header-copy{padding:40px 0 42px clamp(25px,4vw,54px);position:relative;z-index:1}
+.visual-learning-header h1{font:800 clamp(27px,3.2vw,40px)/1.22 var(--font-heading);color:var(--navy);letter-spacing:-1.3px;margin:13px 0}
+.visual-learning-header h1 em{color:var(--blue)}
+.visual-learning-header p{font-size:12px;line-height:1.85;color:var(--muted);max-width:520px;margin:0}
+.visual-head-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.visual-learning-header-image{width:100%;height:100%;object-fit:contain;object-position:center bottom;align-self:end;max-height:320px;display:block}
+.visual-lesson-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.visual-lesson-card{min-width:0;display:flex;flex-direction:column;border:1px solid var(--line);background:var(--paper);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);transition:border-color .2s,transform .2s}
+.visual-lesson-card:hover{transform:translateY(-3px);border-color:#8db9e6}
+.visual-lesson-art{min-height:185px;background:radial-gradient(ellipse at 50% 75%,#e8f5fb,#f5f8fd 75%);display:grid;place-items:end center;overflow:hidden}
+.visual-lesson-art img{width:100%;height:183px;object-fit:contain;object-position:center bottom;display:block}
+.visual-lesson-description{padding:17px;display:flex;flex-direction:column;flex:1}
+.visual-lesson-description>span{color:var(--teal);font-size:8.5px;letter-spacing:1px;text-transform:uppercase;font-weight:800}
+.visual-lesson-description h3{font:800 15px/1.35 var(--font-heading);color:var(--navy);margin:9px 0 7px}
+.visual-lesson-description p{color:var(--muted);font-size:11px;line-height:1.6;margin:0 0 14px;flex:1}
+.visual-lesson-description strong{color:var(--blue);font-size:10px}
+.visual-disclaimer{font-size:10px;line-height:1.8;color:var(--muted);margin:25px 2px 0}
+html[data-theme='dark'] .medarc-students-hero{background:radial-gradient(circle at 80% 30%,#203d5d,#101f33 75%);border-color:#354a65}
+html[data-theme='dark'] .medarc-students-hero .hero-copy h2{color:#f1f7ff}
+html[data-theme='dark'] .medarc-students-hero .hero-copy p,html[data-theme='dark'] .hero-students-caption{color:#afc2d4}
+html[data-theme='dark'] .medarc-students-hero .hero-kicker{color:#8ddec6}
+html[data-theme='dark'] .medarc-students-hero .hero-text-link{color:#accdff}
+html[data-theme='dark'] .medarc-collab-photo,html[data-theme='dark'] .visual-lesson-art{background:radial-gradient(circle at 50% 80%,#26415c,#14283d)}
+html[data-theme='dark'] .visual-learning-header{background:linear-gradient(125deg,#17283a,#1c3d5a)}
+@media(max-width:1100px){
+ .medarc-students-hero .hero-copy{max-width:58%;padding:35px 10px 35px 29px}
+ .hero-students-img{width:54%}
+ .visual-lesson-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:760px){
+ .medarc-students-hero{display:flex;flex-direction:column;min-height:0;align-items:stretch}
+ .medarc-students-hero .hero-copy{max-width:100%;padding:29px 24px 0}
+ .medarc-students-hero .hero-copy h2{font-size:33px;margin:13px 0}
+ .medarc-students-hero .hero-copy p{max-width:530px}
+ .medarc-students-hero .hero-actions{margin:17px 0 10px}
+ .hero-students-img{position:relative;right:auto;bottom:auto;width:100%;height:auto;max-height:340px;object-position:bottom center}
+ .hero-students-caption{position:static;order:3;text-align:center;padding:4px 10px 13px}
+ .medarc-collab-panel{grid-template-columns:1fr}
+ .medarc-collab-photo{min-height:225px;order:2}
+ .medarc-collab-photo img{max-height:260px}
+ .medarc-collab-copy{padding:27px 25px 22px;order:1}
+ .visual-learning-header{grid-template-columns:1fr}
+ .visual-learning-header-copy{padding:28px 26px 10px}
+ .visual-learning-header-image{max-height:265px}
+ .visual-lesson-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:520px){
+ .home-visual-trio{grid-template-columns:1fr 1fr;gap:9px}
+ .home-visual-tile:last-child{grid-column:1/-1}
+ .home-visual-tile img{height:135px}
+ .visual-lesson-grid{gap:9px}
+ .visual-lesson-art{min-height:143px}
+ .visual-lesson-art img{height:138px}
+ .visual-lesson-description{padding:13px}
+ .visual-lesson-description h3{font-size:13px}
+ .visual-lesson-description p{font-size:10px}
+ .medarc-feedback-image{width:66px;height:68px;flex-basis:66px}
+ .medarc-feedback-heading{gap:9px}
+}
