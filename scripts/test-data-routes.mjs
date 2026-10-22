@@ -53,7 +53,7 @@ const firstExam=bank.exams.find(e=>e.questionIds?.filter(id=>!report.excluded.ha
 assert.ok(firstExam);
 const opened=lib.getExam(firstExam.id,1);
 assert.equal(opened.exam.id,firstExam.id);
-assert.equal(opened.exam.total,firstExam.questionIds.length);
+assert.equal(opened.exam.total,firstExam.questionIds.filter(id=>!report.excluded.has(id)).length);
 assert.equal(opened.question.id,firstExam.questionIds.filter(id=>!report.excluded.has(id))[0]);
 const openedNext=lib.getExam(firstExam.id,2);
 assert.equal(openedNext.question.id,firstExam.questionIds.filter(id=>!report.excluded.has(id))[1]);
