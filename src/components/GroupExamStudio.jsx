@@ -1,7 +1,7 @@
 'use client';
 import {useCallback,useEffect,useMemo,useState} from 'react';
 
-const defaults={title:'Medical Revision Group',subject:'',topic:'',capacity:5,questionCount:10,duration:30,mode:'practice'};
+const defaults={title:'Medical Revision Group',subject:'',topic:'',capacity:5,questionCount:10,duration:30,mode:'practice',usernames:''};
 const url=code=>'/api/group-exams/'+encodeURIComponent(code);
 const parse=async response=>{const data=await response.json();if(!response.ok)throw new Error(data.error||'Request failed');return data;};
 function Copy({value,label='Copy'}){return <button type="button" className="medarc-quiz-small" onClick={()=>navigator.clipboard.writeText(value)}>{label}</button>}
@@ -65,7 +65,7 @@ export default function GroupExamStudio(){
  const create=async e=>{
   e.preventDefault();setLoading(true);setError('');setInfo('');
   try{
-   const data=await parse(await fetch('/api/group-exams',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(config)}));
+   const data=await parse(await fetch('/api/group-exams',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({...config,usernames:config.usernames.trim()?config.usernames.split(/[\n,]+/).map(name=>name.trim()).filter(Boolean):[]})}));
    setCreated(data);setCode(data.code);setCodeInput(data.code);
    setToken(data.leaderToken);setRole('leader');setTab('room');
    sessionStorage.setItem('medarc-room-'+data.code,JSON.stringify({token:data.leaderToken,role:'leader'}));
@@ -137,6 +137,7 @@ export default function GroupExamStudio(){
     <label>Assessment type<select value={config.mode} onChange={e=>setConfig({...config,mode:e.target.value})}>
      <option value="practice">Learning practice · unscored</option><option value="scored">Clinically verified scoring only</option></select></label>
    </div>
+   <label className="medarc-group-custom-names">Participant usernames (optional · one per line)<textarea rows={5} value={config.usernames} onChange={e=>setConfig({...config,usernames:e.target.value})} placeholder={'student01\nstudent02\nstudent03\nstudent04\nstudent05'}/><small>Leave blank to generate usernames automatically. When provided, include exactly one unique name for every participant.</small></label>
    <div className="medarc-exam-hint"><strong>{selectedSubject?.count?.toLocaleString()||0} indexed choice questions</strong> in the selected department before topic and review filters. These records are not automatically clinically verified. Scored rooms will only start when reviewed answer keys exist.</div>
    <button className="button button-primary" type="submit" disabled={loading||!valid}>{loading?'Creating room…':'Create exam and generate credentials →'}</button>
   </form>}
