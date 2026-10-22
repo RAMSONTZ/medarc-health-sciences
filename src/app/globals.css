@@ -163,3 +163,11 @@ html[data-theme='dark'] .anatomy-region-chips button.current{background:#145fc7;
 html[data-theme='dark'] .ap-stage-actions select{background:var(--paper);color:var(--ink)}
 
 .ap-marker-feedback{position:absolute;right:-9px;top:-9px;width:17px;height:17px;display:grid;place-items:center;background:#087c5c;color:#fff;border-radius:50%;font-size:11px;line-height:1;border:1px solid #fff}.ap-marker-feedback.bad{background:#b43f4f}
+
+/* Allow long route labels to shrink between fixed mobile navigation controls. */
+@media(max-width:720px){
+ .topbar-left{min-width:0;flex:1;overflow:hidden}
+ .topbar-location{min-width:0;overflow:hidden;white-space:nowrap}
+ .topbar-location>span{overflow:hidden;text-overflow:ellipsis}
+ .topbar-actions{flex-shrink:0}
+}
