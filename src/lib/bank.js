@@ -131,7 +131,16 @@ export function getQuestions(params = {}, answeredOnly = false, subjectLock = ''
 }
 function examMemberships(exam,bank) {
   const excluded=getQuestionQualityReport().excluded;
-  return (exam.questionIds||[]).filter(id=>bank.questionById.has(id)&&!excluded.has(id));
+  // The archived exam keeps every original member; the student-facing
+  // version admits only questions genuinely belonging to its stated subject.
+  // Mixed/unknown collection labels remain intact until editorial review.
+  const lockedSubject=bank.subjects.includes(exam.subject)?exam.subject:'';
+  return (exam.questionIds||[]).filter(id=>
+    bank.questionById.has(id) &&
+    !excluded.has(id) &&
+    !malformedLearningRecord(bank.questionById.get(id)) &&
+    (!lockedSubject || bank.departmentById.get(id).subject===lockedSubject)
+  );
 }
 export function getExams(params={}) {
   const b=getBank(); const q=stringParam(params.q).toLowerCase(); const subject=stringParam(params.subject); const page=intParam(params.page); const limit=16;
@@ -147,7 +156,7 @@ export function getExam(id,position=1) {
   const source=b.questionById.get(visibleIds[pos-1]);
   const dep=source?b.departmentById.get(source.id):null;
   const q=source?{id:source.id,stem:source.stem,subject:dep.subject,topic:dep.topic,sourceSubject:dep.sourceSubject,departmentReview:dep.review,type:source.type,options:source.options||[],status:source.answerAuditStatus||source.status,answer:b.answers[source.id]||null}:null;
-  return {exam:{id:exam.id,title:exam.title,subject:exam.subject,total:visibleIds.length},question:q,pos};
+  return {exam:{id:exam.id,title:exam.title,subject:exam.subject,total:visibleIds.length,archivedTotal:exam.questionIds.length},question:q,pos};
 }
 export function getAudit(pageRaw=1) {
   const b=getBank();const page=intParam(pageRaw);const limit=25;const pages=Math.ceil(b.questions.length/limit);
