@@ -2,6 +2,7 @@ import 'server-only';
 import fs from 'node:fs';
 import path from 'node:path';
 import {assessQuestionQuality} from './question-quality.mjs';
+import {resolveQuestionDepartment,isClinicalManagementQuestion} from './department-routing.mjs';
 
 let memo;
 export function getBank() {
@@ -10,10 +11,27 @@ export function getBank() {
     memo = JSON.parse(fs.readFileSync(file, 'utf8'));
     memo.questionById = new Map(memo.questions.map(q => [q.id, q]));
     memo.examById = new Map(memo.exams.map(x => [x.id, x]));
-    memo.subjectCounts = Object.entries(memo.questions.reduce((a,q) => {
-      a[q.subject || 'Unclassified'] = (a[q.subject || 'Unclassified'] || 0) + 1;
-      return a;
-    }, {})).sort((a,b)=>b[1]-a[1]);
+    memo.departmentById=new Map();
+    const counts={},reasonCounts={},samples={};let moved=0,review=0,anatomyLeaks=0;
+    for(const q of memo.questions){
+      const resolution=resolveQuestionDepartment(q);
+      memo.departmentById.set(q.id,resolution);
+      counts[resolution.subject]=(counts[resolution.subject]||0)+1;
+      if(resolution.reassigned){
+        moved++;
+        reasonCounts[resolution.reason]=(reasonCounts[resolution.reason]||0)+1;
+        if(!samples[resolution.reason])samples[resolution.reason]=[];
+        if(samples[resolution.reason].length<12)samples[resolution.reason].push({id:q.id,from:resolution.sourceSubject,to:resolution.subject,stem:String(q.stem||'').slice(0,170)});
+      }
+      if(resolution.review)review++;
+      if(resolution.subject==='Human Anatomy'&&isClinicalManagementQuestion(q))anatomyLeaks++;
+    }
+    if(anatomyLeaks)throw new Error('Clinical management question leaked into Anatomy department');
+    memo.departmentReport={total:memo.questions.length,reassigned:moved,needsDepartmentReview:review,reasonCounts,samples,anatomyManagementLeaks:anatomyLeaks};
+    memo.sourceSubjectCounts=Object.entries(memo.questions.reduce((a,q)=>{
+      const label=q.subject||'Unclassified Health Sciences';a[label]=(a[label]||0)+1;return a;
+    },{}));
+    memo.subjectCounts=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
     memo.subjects = memo.subjectCounts.map(([name]) => name);
     memo.examSubjects = [...new Set(memo.exams.map(e=>e.subject).filter(Boolean))].sort();
     memo.types = [...new Set(memo.questions.map(q=>q.type).filter(Boolean))].sort();
@@ -49,6 +67,7 @@ export function getQuestionQualityReport() {
   }
   return bank.qualityReport;
 }
+export function getDepartmentReport(){return getBank().departmentReport;}
 export function getStats() {
   const b = getBank();
   return { questions: b.questions.length, exams: b.exams.length, answered: Object.keys(b.answers || {}).length };
@@ -73,6 +92,7 @@ export function getQuestions(params = {}, answeredOnly = false, subjectLock = ''
   const type = stringParam(params.type);
   const search = stringParam(params.q).toLowerCase();
   const status = stringParam(params.status);
+  const departmentById=b.departmentById;
   const page = intParam(params.page);
   const limit = 10;
   const matched=[];
@@ -81,25 +101,32 @@ export function getQuestions(params = {}, answeredOnly = false, subjectLock = ''
     const hasAnswer=Boolean(b.answers[q.id]);
     if (malformedLearningRecord(q)) continue;
     if (answeredOnly && !hasAnswer) continue;
-    if (subject && q.subject !== subject) continue;
-    if (topic && q.topic !== topic) continue;
+    const department=departmentById.get(q.id);
+    if (subject && department.subject !== subject) continue;
+    if (topic && department.topic !== topic) continue;
     if (type && q.type !== type) continue;
     if (status==='answered' && !hasAnswer) continue;
     if (status==='unanswered' && hasAnswer) continue;
-    if (status==='needs-review' && !['review_required','quarantine'].includes(q.answerAuditStatus || q.status)) continue;
-    if (search && !`${q.stem||''} ${q.subject||''} ${q.topic||''} ${q.subtopic||''} ${(q.options||[]).map(o=>o.text).join(' ')}`.toLowerCase().includes(search)) continue;
+    if (status==='needs-review' && !department.review && !['review_required','quarantine'].includes(q.answerAuditStatus || q.status)) continue;
+    if (search && !`${q.stem||''} ${department.subject} ${department.topic} ${q.subtopic||''} ${(q.options||[]).map(o=>o.text).join(' ')}`.toLowerCase().includes(search)) continue;
     matched.push(q);
   }
   const count=matched.length;
   const pages=Math.max(1,Math.ceil(count/limit));
   const safePage=Math.min(page,pages);
-  const questions=matched.slice((safePage-1)*limit,safePage*limit).map(q=>({
-    id:q.id, stem:q.stem, subject:q.subject, topic:q.topic, type:q.type,
-    options:q.options||[], status:q.answerAuditStatus||q.status,
-    priority:q.priority, answer:b.answers[q.id]||null
-  }));
+  const questions=matched.slice((safePage-1)*limit,safePage*limit).map(q=>{
+    const department=departmentById.get(q.id);
+    return {
+      id:q.id,stem:q.stem,subject:department.subject,topic:department.topic,type:q.type,
+      sourceSubject:department.sourceSubject,departmentReview:department.review,
+      options:q.options||[],status:q.answerAuditStatus||q.status,
+      priority:q.priority,answer:b.answers[q.id]||null
+    };
+  });
   let topics=[];
-  if(subject) topics=[...new Set(b.questions.filter(q=>q.subject===subject).map(q=>q.topic).filter(Boolean))].sort().slice(0,300);
+  if(subject) topics=[...new Set(b.questions.filter(q=>
+    !excluded.has(q.id)&&departmentById.get(q.id).subject===subject
+  ).map(q=>departmentById.get(q.id).topic).filter(Boolean))].sort().slice(0,300);
   return {questions,count,page:safePage,pages,topics,limit,params:{subject,topic,type,search,status}};
 }
 function examMemberships(exam,bank) {
@@ -118,12 +145,13 @@ export function getExam(id,position=1) {
   if(!visibleIds.length)return null;
   const pos=Math.min(intParam(position),visibleIds.length);
   const source=b.questionById.get(visibleIds[pos-1]);
-  const q=source?{id:source.id,stem:source.stem,subject:source.subject,topic:source.topic,type:source.type,options:source.options||[],status:source.answerAuditStatus||source.status,answer:b.answers[source.id]||null}:null;
+  const dep=source?b.departmentById.get(source.id):null;
+  const q=source?{id:source.id,stem:source.stem,subject:dep.subject,topic:dep.topic,sourceSubject:dep.sourceSubject,departmentReview:dep.review,type:source.type,options:source.options||[],status:source.answerAuditStatus||source.status,answer:b.answers[source.id]||null}:null;
   return {exam:{id:exam.id,title:exam.title,subject:exam.subject,total:visibleIds.length},question:q,pos};
 }
 export function getAudit(pageRaw=1) {
   const b=getBank();const page=intParam(pageRaw);const limit=25;const pages=Math.ceil(b.questions.length/limit);
-  return {count:b.questions.length,page:Math.min(page,pages),pages,rows:b.questions.slice((Math.min(page,pages)-1)*limit,Math.min(page,pages)*limit).map(q=>({id:q.id,subject:q.subject,topic:q.topic,status:q.answerAuditStatus||q.status,answered:!!b.answers[q.id],quality:assessQuestionQuality(q).status,qualityReasons:assessQuestionQuality(q).reasons,flags:q.auditFlags||[]}))};
+  return {count:b.questions.length,page:Math.min(page,pages),pages,rows:b.questions.slice((Math.min(page,pages)-1)*limit,Math.min(page,pages)*limit).map(q=>({id:q.id,subject:b.departmentById.get(q.id).subject,sourceSubject:q.subject,topic:b.departmentById.get(q.id).topic,departmentReason:b.departmentById.get(q.id).reason,departmentReview:b.departmentById.get(q.id).review,status:q.answerAuditStatus||q.status,answered:!!b.answers[q.id],quality:assessQuestionQuality(q).status,qualityReasons:assessQuestionQuality(q).reasons,flags:q.auditFlags||[]}))};
 }
 export function getTopicGroups(){
   const b=getBank();
