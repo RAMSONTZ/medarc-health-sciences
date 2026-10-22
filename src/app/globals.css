@@ -283,3 +283,5 @@ html[data-theme='dark'] .anatomy-private-full.anatomy-device-auto{background:#14
 .anatomy-private-toolbar button{border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--muted);padding:10px;font-size:11px;font-weight:700}
 .anatomy-private-toolbar button.active{border-color:var(--blue);color:var(--blue);background:var(--ice)}
 @media(max-width:750px){.anatomy-private-detail{grid-template-columns:1fr}.anatomy-private-full{min-height:200px}.anatomy-private-detail-panel{padding:8px}.anatomy-private-vault input{max-width:none;flex:1 1 100%}}
+
+.mva-quick-actions{display:flex;flex-direction:column;align-items:flex-end;gap:8px}.mva-private-link{background:var(--blue);color:#fff;border-radius:9px;padding:11px 14px;font-size:12px;font-weight:800;white-space:nowrap}.mva-private-link:hover{filter:brightness(.92)}@media(max-width:680px){.mva-quick-actions{align-items:flex-start;margin-top:14px}}
