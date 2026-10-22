@@ -36,6 +36,16 @@ for(const q of bank.questions){
   departmentReason:dep.reason,topicReason:dep.topicReason,duplicateOf,hasProvisionalAnswer:!!bank.answers?.[q.id]});
 }
 dupes=rows.filter(x=>x.duplicateOf).length;
+const unresolvedSample={};
+for(const q of bank.questions){
+ const dep=curateQuestion(q);
+ if(dep.topic!=='Topic review required'||assessQuestionQuality(q).status==='quarantined')continue;
+ const sub=dep.subject;
+ if(!['Pharmacology','ENT','Human Anatomy','Internal Medicine','Human Physiology','Embryology','Pediatrics and Child Health','General Surgery','Neurology','Unclassified Health Sciences'].includes(sub))continue;
+ if(!unresolvedSample[sub])unresolvedSample[sub]=[];
+ if(unresolvedSample[sub].length<14)unresolvedSample[sub].push({id:q.id,stem:String(q.stem||'').slice(0,225)});
+}
+console.log('UNCATEGORIZED_TOPIC_SAMPLES='+JSON.stringify(unresolvedSample));
 const summary={
  auditVersion:'2026-10-22-full-bank-curation',
  original:{questions:bank.questions.length,examSets:bank.exams.length,provisionalAnswers:Object.keys(bank.answers||{}).length},
