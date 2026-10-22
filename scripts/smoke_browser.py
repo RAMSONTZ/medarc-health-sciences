@@ -16,7 +16,7 @@ from pathlib import Path
 from playwright.async_api import async_playwright
 
 BASE=(sys.argv[1] if len(sys.argv)>1 else 'http://localhost:3000').rstrip('/')
-ROUTES=['/','/topics','/practice','/answers','/exams','/anatomy','/review']
+ROUTES=['/','/topics','/practice','/answers','/exams','/anatomy','/review','/visual-learning']
 VIEWPORTS=[{'width':390,'height':844}, {'width':768,'height':1024}, {'width':1440,'height':960}]
 
 async def assert_route(page, route):
@@ -28,6 +28,24 @@ async def assert_route(page, route):
     assert overflow<=2,(route,'horizontal overflow',overflow)
     heading=page.locator('h1').first
     assert await heading.count(),f'Missing page heading {route}'
+
+async def check_uploaded_visuals(page):
+    await page.goto(BASE,wait_until='domcontentloaded')
+    pathways=page.locator('.medarc-learning-route')
+    assert await pathways.count()==6,'Homepage missing illustrated learning pathways'
+    hero_image=pathways.first.locator('img')
+    await hero_image.scroll_into_view_if_needed()
+    await hero_image.evaluate('(img) => img.decode()')
+    assert await hero_image.evaluate('(img) => img.naturalWidth>0'),'Homepage student asset not loaded'
+    scenes=page.locator('.medarc-study-scene')
+    assert await scenes.count()>=6,'Homepage missing illustrated clinical scenes'
+    await page.goto(BASE+'/visual-learning',wait_until='domcontentloaded')
+    gallery=page.locator('.visual-lesson-card')
+    assert await gallery.count()==20,'Full study gallery does not display 20 assets'
+    first=gallery.first.locator('img')
+    await first.scroll_into_view_if_needed()
+    await first.evaluate('(img) => img.decode()')
+    assert await first.evaluate('(img) => img.naturalWidth>0'),'Visual gallery asset not loaded'
 
 async def check_search(page):
     await page.goto(BASE,wait_until='domcontentloaded')
@@ -121,6 +139,7 @@ async def main():
             for route in ROUTES:
                 await assert_route(page,route)
                 print('PASS',viewport['width'],route)
+            await check_uploaded_visuals(page)
             await check_search(page)
             await check_exam(page)
             await check_answers(page)
