@@ -10,11 +10,12 @@ export async function GET(){
 export async function POST(request){
  try{
   const input=await request.json();
-  const result=await createGroup(input);
+  const origin=request.headers.get('x-real-ip')||request.headers.get('x-forwarded-for')?.split(',')[0]||'unidentified';
+  const result=await createGroup(input,origin);
   return NextResponse.json(result,{status:201,headers:noStore});
  }catch(error){
   const msg=String(error.message||'Could not create exam.');
-  const bad=/required|not enough|unknown|choose/i.test(msg);
+  const bad=/required|not enough|unknown|choose|too many rooms/i.test(msg);
   return NextResponse.json({error:bad?msg:'Exam room could not be created.'},{status:bad?422:503,headers:noStore});
  }
 }
