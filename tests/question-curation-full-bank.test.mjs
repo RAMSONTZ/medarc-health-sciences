@@ -13,7 +13,7 @@ test('all 30,068 original IDs receive explicit subject, topic, source and review
  for(const question of bank.questions){
   assert.ok(!ids.has(question.id),'Duplicate source ID '+question.id);ids.add(question.id);
   const d=curateQuestion(question);
-  assert.ok(d.subject&&d.topic&&d.sourceSubject!==undefined,'Missing classification '+question.id);
+  assert.ok(d.subject&&d.topic&&d.sourceSubject!==undefined,'Missing classification '+question.id+': '+JSON.stringify({source:question.subject,originalTopic:question.topic,curated:d}));
   assert.equal(d.sourceSubject,question.subject||'Unclassified Health Sciences');
   if(d.topic!=='Topic review required')categories++;
   if(d.subject==='Human Anatomy'&&isClinicalManagementQuestion(question))wrong++;
