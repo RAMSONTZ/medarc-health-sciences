@@ -16,7 +16,8 @@ const usableAnswered=usableQuestions.filter(q=>ANSWERS[q.id]).length;
 
 // Every route test reads the true 30,068-question bank, not synthetic fixtures.
 const source=fs.readFileSync(path.join(root,'src/lib/bank.js'), 'utf8').replace(/^import 'server-only';\s*/m,'')
-  .replace("from './question-quality.mjs';", "from '"+pathToFileURL(path.join(root,'src/lib/question-quality.mjs')).href+"';");
+  .replace("from './question-quality.mjs';", "from '"+pathToFileURL(path.join(root,'src/lib/question-quality.mjs')).href+"';")
+  .replace("from './department-routing.mjs';", "from '"+pathToFileURL(path.join(root,'src/lib/department-routing.mjs')).href+"';");
 const lib=await import(`data:text/javascript;base64,${Buffer.from(source).toString('base64')}`);
 
 test('student practice excludes quarantined imports while preserving record order',()=>{
