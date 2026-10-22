@@ -13,6 +13,7 @@ const RX={
  pharmacology:/\b(?:which|what|name|identify)\s+(?:one\s+of\s+the\s+following\s+)?(?:drug|drugs|medication|medications|antibiotic|antihypertensive|antiviral|antifungal|agent|agents)\b|\b(?:drugs?|medications?)\s+(?:of\s+choice|when\s+used|associated\s+with|caus(?:es?|ing)|inhibit(?:s)?|block(?:s)?)\b|\b(?:mechanism\s+of\s+action|pharmacokinetics?|pharmacodynamics?|adverse\s+(?:drug\s+)?(?:effect|reaction)|drug\s+interaction|half.life|bioavailability)\b/i,
  anatomicalQuestion:/\b(?:which|what|name|identify|locate|describe|where)\b[^?.]{0,150}\b(?:anatom(?:y|ical)|arter(?:y|ies)|vein(?:s)?|nerves?|muscles?|bones?|joints?|ligaments?|foramen|origin|insertion|innervat(?:e|ion)|blood supply|drainage|branches?|anatomical structures?|lymph nodes?|located)\b|\b(?:course|relations|attachments|arterial supply|venous drainage|nerve supply)\s+of\b/i,
  gyn:/\b(?:pregnan(?:cy|t)|gestation(?:al)?|fetal|foetal|placenta|obstetri(?:c|cal)|preeclampsia|pre.eclampsia|eclampsia|postpartum|antenatal|intrapartum|labou?r|cervical\s+cancer|pelvic\s+inflammatory\s+disease|ectopic pregnancy|uterine|ovarian|endometriosis|breech|g[1-9]p[0-9]+|gynecolo(?:gy|gical))\b/i,
+ pediatrics:/\b(?:pediatri(?:c|cs)|paediatri(?:c|cs)|neonat(?:e|al)|newborn|infant|toddler|\d+\s*[- ]year[- ]old\s+(?:child|boy|girl))\b/i,
  hematology:/\b(?:leukemia|leukaemia|lymphoma|myeloma|sickle.cell|thrombocytopenia|coagulopath(?:y|ies)|aplastic anemia|haemophilia|hemophilia)\b/i,
  neurology:/\b(?:stroke|TIA\b|transient ischemic attack|transient ischaemic attack|cerebrovascular|cerebral infarct|intracranial hemorrhage|intracerebral haemorrhage|meningitis|encephalitis|seizure|epilep(?:sy|tic)|parkinson|multiple sclerosis|myasthenia gravis)\b/i,
  psychiatry:/\b(?:depression|schizophrenia|psychosis|mania\b|bipolar|anxiety disorder|suicidal|antipsychotic|antidepressant)\b/i,
@@ -34,6 +35,7 @@ function clinicalTarget(stem){
  const s=stem;
  if(RX.gyn.test(s))return 'Obstetrics and Gynecology';
  if(RX.hematology.test(s))return 'Hematology';
+ if(RX.pediatrics.test(s))return 'Pediatrics and Child Health';
  if(RX.psychiatry.test(s))return 'Psychiatry';
  if(RX.neurology.test(s))return 'Neurology';
  if(RX.ophthalmology.test(s))return 'Ophthalmology';
@@ -54,6 +56,7 @@ function sensibleTopic(subject,stem){
  if(subject==='Neurology')return 'Neurological disorders';
  if(subject==='Obstetrics and Gynecology')return 'Obstetric and gynecological care';
  if(subject==='Hematology')return 'Blood disorders';
+ if(subject==='Pediatrics and Child Health')return 'Pediatric clinical care';
  if(subject==='Human Anatomy')return 'Anatomical structures';
  if(subject===UNRESOLVED_SUBJECT)return 'Department review required';
  return 'Clinical cases and management';
@@ -80,6 +83,8 @@ export function resolveQuestionDepartment(question){
   else{subject=UNRESOLVED_SUBJECT;reason='unresolved_management_mislabelled_anatomy';review=true;}
  } else if(source===ANATOMY && !anatomical && pharm){
   subject=PHARMA;reason='pharmacology_content_mislabelled_anatomy';
+ } else if(source===ANATOMY && !anatomical && target && /\b(?:patient|presents?|diagnosis|case|syndrome|symptom|hospital|physician|most likely)\b/i.test(stem)){
+  subject=target;reason='clinical_case_mislabelled_anatomy';
  } else if(source===ANATOMY && !anatomical && RX.immunology.test(stem)){
   subject='Immunology';reason='immunology_content_mislabelled_anatomy';
  } else if(foundational.has(source) && clinical && source!==ANATOMY){
