@@ -9,6 +9,7 @@ const primaryDestinations=[
  {href:'/answers',title:'Answers & explanations',desc:'Review provisional learning notes',symbol:'↗'},
  {href:'/exams',title:'Exam collections',desc:'Prepare for your examinations',symbol:'↗'},
  {href:'/anatomy',title:'Visual anatomy',desc:'Explore structures and specimens',symbol:'↗'},
+ {href:'/visual-learning',title:'Visual learning',desc:'20 engaging study illustrations',symbol:'↗'},
  {href:'/review',title:'Quality audit',desc:'Understand source limitations',symbol:'↗'}
 ];
 const features=[
