@@ -44,6 +44,7 @@ export function AnatomyPractical({images=[]}){
  useEffect(()=>{try{setResponses(JSON.parse(localStorage.getItem(localKey)||'{}')||{});}catch{}},[]);
  useEffect(()=>{if(available.length && !asset && !localAsset) chooseAsset(available[0]);},[available]);
  useEffect(()=>()=>{if(localUrl.current)URL.revokeObjectURL(localUrl.current)},[]);
+ useEffect(()=>{const receive=e=>{if(e.detail instanceof File)onLocalFile(e.detail)};window.addEventListener('medarc:anatomy-open-file',receive);return()=>window.removeEventListener('medarc:anatomy-open-file',receive)},[]);
  useEffect(()=>{const handler=e=>{if(e.key==='Escape' && document.activeElement?.tagName!=='INPUT')setSelected(-1)};window.addEventListener('keydown',handler);return ()=>window.removeEventListener('keydown',handler)},[]);
  const resetQuestion=()=>{setAnswerInput('');setRevealed(false);setChecked(false);};
  function chooseAsset(item){setAsset(item);setLocalAsset(null);setMarkers(item.markers||[]);setSelected(0);setQuestionType('name');resetQuestion();setImageError('');setDraftNotice('');}
