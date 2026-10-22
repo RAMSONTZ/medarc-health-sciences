@@ -218,7 +218,7 @@ export async function groupAction(room,identity,input){
  }
  if(action==='submit'){
   if(identity.role!=='student')throw new Error('Only students can submit.');
-  const rows=await query("UPDATE medarc_group_participants SET submitted_at=now() WHERE id=$1 AND submitted_at IS NULL AND (SELECT status FROM medarc_group_rooms WHERE id=$2)='running' RETURNING id",[identity.participant.id,room.id]);
+  const rows=await query("UPDATE medarc_group_participants SET submitted_at=now() WHERE id=$1 AND submitted_at IS NULL AND (SELECT status FROM medarc_group_rooms WHERE id=$2)='running' AND now()<(SELECT ends_at FROM medarc_group_rooms WHERE id=$2) RETURNING id",[identity.participant.id,room.id]);
   if(!rows.length)throw new Error('Attempt was already submitted.');
   return {ok:true};
  }
