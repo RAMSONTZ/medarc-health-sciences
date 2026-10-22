@@ -46,7 +46,18 @@ export function groupExamSubjects(){
  return [...groups.values()].sort((a,b)=>a.subject.localeCompare(b.subject))
   .map(g=>({subject:g.subject,count:g.count,topics:[...g.topics].sort()}));
 }
-export async function createGroup(input){
+async function checkRoomCreationLimit(source){
+ // Never persist the source IP or user-agent; store only a keyed one-way digest.
+ const hash=digest(process.env.MEDARC_DATABASE_URL+':'+clean(source,140));
+ const rows=await query(
+  "INSERT INTO medarc_group_throttle(client_hash,window_started,attempts) VALUES($1,now(),1) "+
+  "ON CONFLICT(client_hash) DO UPDATE SET "+
+  "attempts=CASE WHEN medarc_group_throttle.window_started<now()-interval '1 hour' THEN 1 ELSE medarc_group_throttle.attempts+1 END, "+
+  "window_started=CASE WHEN medarc_group_throttle.window_started<now()-interval '1 hour' THEN now() ELSE medarc_group_throttle.window_started END RETURNING attempts",
+  [hash]);
+ if(rows[0]?.attempts>10)throw new Error('Too many rooms created from this connection. Please try again later.');
+}
+export async function createGroup(input,source='unknown'){
  const title=clean(input?.title,120),subject=clean(input?.subject,120),topic=clean(input?.topic,160);
  const capacity=Number(input?.capacity),questionCount=Number(input?.questionCount),duration=Number(input?.duration);
  const mode=input?.mode==='scored'?'scored':'practice';
@@ -60,6 +71,7 @@ export async function createGroup(input){
  if(available.length<questionCount)throw new Error(mode==='scored'?
  'Not enough independently reviewed answer keys for a scored exam. Select group practice instead.':
  'Not enough valid questions in this subject and topic. Select a broader topic.');
+ await checkRoomCreationLimit(source);
  const chosen=shuffle(available).slice(0,questionCount);
  const leaderToken=secret(),adminToken=secret(),examCode=code();
  const credentials=Array.from({length:capacity},(_,i)=>{
