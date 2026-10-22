@@ -194,6 +194,6 @@ export function getTopicGroups(){
     const subject=b.departmentById.get(q.id).subject;
     counts.set(subject,(counts.get(subject)||0)+1);
   }
-  for(const [name,count] of [...counts].sort((a,b)=>b[1]-a[1])){const low=name.toLowerCase();if(basicHints.some(x=>low.includes(x)))groups.basic.push({name,count});else if(clinicalHints.some(x=>low.includes(x)))groups.clinical.push({name,count});else groups.other.push({name,count});}
+  for(const [name,count] of [...counts].sort((a,b)=>b[1]-a[1])){if(typeof name!=='string'||!name.trim())continue;const low=name.toLowerCase();if(basicHints.some(x=>low.includes(x)))groups.basic.push({name,count});else if(clinicalHints.some(x=>low.includes(x)))groups.clinical.push({name,count});else groups.other.push({name,count});}
   return groups;
 }
