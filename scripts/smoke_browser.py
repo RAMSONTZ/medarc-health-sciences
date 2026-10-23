@@ -13,7 +13,7 @@ import asyncio
 import json
 import sys
 from pathlib import Path
-from playwright.async_api import async_playwright
+from playwright.async_api import async_playwright, expect
 
 BASE=(sys.argv[1] if len(sys.argv)>1 else 'http://localhost:3000').rstrip('/')
 ROUTES=['/','/topics','/topics/Human%20Anatomy','/practice','/answers','/exams','/anatomy','/review','/visual-learning','/group-exams']
@@ -118,14 +118,14 @@ async def check_answer_colors(page):
     await card.locator('input[value="B"]').check()
     assert await card.locator('.answer-feedback.is-correct').count() == 1
     assert await card.locator('.answer-option.option-correct input[value="B"]').count() == 1
-    assert await card.locator('.answer-option.option-correct').evaluate('(e)=>getComputedStyle(e).backgroundColor') == 'rgb(236, 253, 243)'
+    await expect(card.locator('.answer-option.option-correct')).to_have_css('background-color','rgb(236, 253, 243)')
     await card.locator('input[value="A"]').check()
     assert await card.locator('.answer-feedback.is-incorrect').count() == 1
     assert await card.locator('.answer-option.option-incorrect input[value="A"]').count() == 1
-    assert await card.locator('.answer-option.option-incorrect').evaluate('(e)=>getComputedStyle(e).backgroundColor') == 'rgb(254, 242, 242)'
+    await expect(card.locator('.answer-option.option-incorrect')).to_have_css('background-color','rgb(254, 242, 242)')
     assert await card.locator('.answer-feedback a, .explanation, .answer-references').count() == 0
     await page.evaluate("document.documentElement.dataset.theme='dark'")
-    assert await card.locator('.answer-option.option-incorrect').evaluate('(e)=>getComputedStyle(e).backgroundColor') == 'rgb(70, 28, 36)'
+    await expect(card.locator('.answer-option.option-incorrect')).to_have_css('background-color','rgb(70, 28, 36)')
     await page.evaluate("document.documentElement.dataset.theme='light'")
 
 async def check_profile(page):
