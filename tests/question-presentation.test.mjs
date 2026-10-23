@@ -78,3 +78,14 @@ test('no recognized explicit answer markers reach a usable learner stem or choic
   }
  }
 });
+
+test('cleaning removes imported numbering and known OCR breaks without changing clinical values',()=>{
+ const q={id:'cleanup-test',stem:'12. Which structure is related to the media- stinum?',options:[{label:'A',text:'The inter- costal nerve.'},{label:'B',text:'A 3-year-old patient receives 0.5 mg/kg/day.'}]};
+ const p=prepareLearningQuestion(q);
+ assert.equal(p.question.stem,'Which structure is related to the mediastinum?');
+ assert.equal(p.question.options[0].text,'The intercostal nerve.');
+ assert.equal(p.question.options[1].text,q.options[1].text);
+ const clinical={id:'age-test',stem:'3 year old child has fever. Which diagnosis is most likely?',options:[]};
+ assert.equal(prepareLearningQuestion(clinical).question.stem,clinical.stem);
+ assert.equal(q.stem,'12. Which structure is related to the media- stinum?');
+});
