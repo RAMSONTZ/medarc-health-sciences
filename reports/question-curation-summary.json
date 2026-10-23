@@ -1,0 +1,1790 @@
+{
+  "auditVersion": "2026-10-23-question-cleanup-and-editorial-review",
+  "completionStatus": "incomplete_individual_editorial_review",
+  "methodology": "Every record passed deterministic checks; only explicitly marked records were individually source-checked. An automated department assignment is not medical validation.",
+  "original": {
+    "questions": 30068,
+    "examSets": 1201,
+    "provisionalAnswers": 2325
+  },
+  "counts": {
+    "analyzed": 30068,
+    "departmentReassigned": 1252,
+    "topicCategorized": 15680,
+    "topicNeedsReview": 14388,
+    "reviewRequired": 17894,
+    "quarantined": 1171,
+    "strictDuplicateRecords": 664,
+    "anatomyManagementLeaks": 0
+  },
+  "editorial": {
+    "individuallyReviewed": 54,
+    "sourceCheckedAnswersAdded": 45,
+    "changedPresentations": 1648,
+    "questionsWithAnswerMaterialSeparated": 1037,
+    "questionsWithChoicesRecovered": 959,
+    "effectiveAnswerRecords": 2370,
+    "unanswered": 27698,
+    "clinicianSignedOff": 0
+  },
+  "bySubject": [
+    [
+      "Pharmacology",
+      6714
+    ],
+    [
+      "Unclassified Health Sciences",
+      3878
+    ],
+    [
+      "Human Anatomy",
+      3290
+    ],
+    [
+      "Parasitology",
+      3146
+    ],
+    [
+      "ENT",
+      1622
+    ],
+    [
+      "General Pathology",
+      1526
+    ],
+    [
+      "Internal Medicine",
+      1169
+    ],
+    [
+      "Hematology",
+      1159
+    ],
+    [
+      "General Surgery",
+      974
+    ],
+    [
+      "Microbiology",
+      973
+    ],
+    [
+      "Community Health and Public Health",
+      937
+    ],
+    [
+      "Obstetrics and Gynecology",
+      676
+    ],
+    [
+      "Human Physiology",
+      530
+    ],
+    [
+      "Pediatrics and Child Health",
+      498
+    ],
+    [
+      "Medical Biochemistry",
+      384
+    ],
+    [
+      "Embryology",
+      325
+    ],
+    [
+      "Neurology",
+      295
+    ],
+    [
+      "Community Medicine",
+      295
+    ],
+    [
+      "Immunology",
+      290
+    ],
+    [
+      "Biostatistics and Research",
+      229
+    ],
+    [
+      "Nutrition and Dietetics",
+      219
+    ],
+    [
+      "Histology",
+      197
+    ],
+    [
+      "Anesthesiology",
+      111
+    ],
+    [
+      "Psychiatry",
+      89
+    ],
+    [
+      "Epidemiology",
+      87
+    ],
+    [
+      "Ophthalmology",
+      85
+    ],
+    [
+      "Emergency Medicine",
+      68
+    ],
+    [
+      "Medical Genetics",
+      67
+    ],
+    [
+      "Radiography and Medical Imaging",
+      60
+    ],
+    [
+      "Dermatology",
+      50
+    ],
+    [
+      "Clinical Medicine",
+      46
+    ],
+    [
+      "Medical Laboratory Sciences",
+      24
+    ],
+    [
+      "Medical Ethics and Law",
+      18
+    ],
+    [
+      "Public Health and Research",
+      17
+    ],
+    [
+      "Development Studies",
+      9
+    ],
+    [
+      "Orthopedics",
+      8
+    ],
+    [
+      "Nursing",
+      3
+    ]
+  ],
+  "topics": [
+    [
+      "Unclassified Health Sciences / Topic review required",
+      3875
+    ],
+    [
+      "Pharmacology / Topic review required",
+      3491
+    ],
+    [
+      "Parasitology / General Parasitology",
+      2622
+    ],
+    [
+      "Human Anatomy / Topic review required",
+      1793
+    ],
+    [
+      "ENT / Topic review required",
+      1566
+    ],
+    [
+      "Pharmacology / General Pharmacology",
+      972
+    ],
+    [
+      "General Pathology / General and Systemic Pathology",
+      810
+    ],
+    [
+      "Community Health and Public Health / Epidemiology",
+      778
+    ],
+    [
+      "Microbiology / Microorganisms and Infection",
+      766
+    ],
+    [
+      "Pharmacology / Antimicrobial Pharmacology",
+      682
+    ],
+    [
+      "Hematology / Hematology",
+      651
+    ],
+    [
+      "Internal Medicine / Topic review required",
+      595
+    ],
+    [
+      "General Surgery / Topic review required",
+      523
+    ],
+    [
+      "Pharmacology / Autonomic Pharmacology",
+      435
+    ],
+    [
+      "Human Physiology / Topic review required",
+      432
+    ],
+    [
+      "Human Anatomy / Thorax",
+      414
+    ],
+    [
+      "Pharmacology / Cardiovascular Pharmacology",
+      390
+    ],
+    [
+      "General Pathology / Cell Injury and Adaptation",
+      372
+    ],
+    [
+      "Pediatrics and Child Health / Topic review required",
+      367
+    ],
+    [
+      "Pharmacology / CNS Pharmacology",
+      300
+    ],
+    [
+      "Embryology / Topic review required",
+      280
+    ],
+    [
+      "Human Anatomy / Head and Neck",
+      278
+    ],
+    [
+      "Internal Medicine / Respiratory Medicine",
+      254
+    ],
+    [
+      "Human Anatomy / Upper Limb",
+      253
+    ],
+    [
+      "Hematology / Red Cell Disorders",
+      230
+    ],
+    [
+      "Obstetrics and Gynecology / Antenatal Care",
+      225
+    ],
+    [
+      "Parasitology / Helminthology",
+      201
+    ],
+    [
+      "Human Anatomy / Lower Limb",
+      200
+    ],
+    [
+      "Parasitology / Protozoology",
+      198
+    ],
+    [
+      "Neurology / Topic review required",
+      184
+    ],
+    [
+      "Obstetrics and Gynecology / Topic review required",
+      174
+    ],
+    [
+      "Pharmacology / Toxicology and Adverse Effects",
+      167
+    ],
+    [
+      "Medical Biochemistry / Proteins and Enzymes",
+      165
+    ],
+    [
+      "General Pathology / Neoplasia",
+      162
+    ],
+    [
+      "Hematology / White Cell and Lymphoid Disorders",
+      157
+    ],
+    [
+      "Pharmacology / Endocrine Pharmacology",
+      154
+    ],
+    [
+      "Community Health and Public Health / Topic review required",
+      153
+    ],
+    [
+      "Nutrition and Dietetics / Topic review required",
+      152
+    ],
+    [
+      "Human Anatomy / Abdomen",
+      151
+    ],
+    [
+      "Immunology / Topic review required",
+      147
+    ],
+    [
+      "Community Medicine / Public Health and Community Medicine · Suggested",
+      142
+    ],
+    [
+      "Biostatistics and Research / Statistical Inference",
+      141
+    ],
+    [
+      "Human Anatomy / Pelvis and Perineum",
+      124
+    ],
+    [
+      "Anesthesiology / Topic review required",
+      111
+    ],
+    [
+      "Internal Medicine / Cardiology",
+      110
+    ],
+    [
+      "Internal Medicine / Endocrinology",
+      106
+    ],
+    [
+      "Microbiology / Bacteriology",
+      103
+    ],
+    [
+      "General Pathology / Inflammation and Repair",
+      102
+    ],
+    [
+      "Immunology / Adaptive Immunity",
+      97
+    ],
+    [
+      "Microbiology / Virology",
+      95
+    ],
+    [
+      "Histology / Topic review required",
+      92
+    ],
+    [
+      "Obstetrics and Gynecology / Labour and Delivery",
+      84
+    ],
+    [
+      "Medical Biochemistry / Water, pH and Buffers",
+      79
+    ],
+    [
+      "Obstetrics and Gynecology / Labor and Delivery · Suggested",
+      79
+    ],
+    [
+      "General Surgery / Perioperative Care",
+      77
+    ],
+    [
+      "Parasitology / Medical Entomology",
+      74
+    ],
+    [
+      "Obstetrics and Gynecology / Antenatal Care · Suggested",
+      68
+    ],
+    [
+      "Nutrition and Dietetics / Clinical Nutrition",
+      67
+    ],
+    [
+      "Ophthalmology / Topic review required",
+      66
+    ],
+    [
+      "Hematology / Hemostasis and Thrombosis",
+      60
+    ],
+    [
+      "Hematology / Transfusion Medicine",
+      59
+    ],
+    [
+      "Human Anatomy / Neuroanatomy",
+      56
+    ],
+    [
+      "Pediatrics and Child Health / Neonatology",
+      56
+    ],
+    [
+      "Human Physiology / Transport and Homeostasis",
+      55
+    ],
+    [
+      "Internal Medicine / Gastroenterology and Hepatology",
+      54
+    ],
+    [
+      "Epidemiology / Topic review required",
+      52
+    ],
+    [
+      "General Surgery / Trauma and Emergency Surgery · Suggested",
+      51
+    ],
+    [
+      "Medical Genetics / Topic review required",
+      51
+    ],
+    [
+      "Psychiatry / Topic review required",
+      48
+    ],
+    [
+      "Biostatistics and Research / Topic review required",
+      48
+    ],
+    [
+      "General Pathology / Hemodynamic Disorders",
+      48
+    ],
+    [
+      "Neurology / Cerebrovascular Disease",
+      47
+    ],
+    [
+      "General Surgery / Gastrointestinal",
+      46
+    ],
+    [
+      "General Surgery / Acute Abdomen",
+      45
+    ],
+    [
+      "Parasitology / Parasite Life Cycles",
+      43
+    ],
+    [
+      "Dermatology / Topic review required",
+      42
+    ],
+    [
+      "Community Medicine / Infectious Diseases",
+      39
+    ],
+    [
+      "Radiography and Medical Imaging / Topic review required",
+      37
+    ],
+    [
+      "General Surgery / Trauma and Emergency Surgery",
+      35
+    ],
+    [
+      "Community Medicine / Cardiovascular",
+      35
+    ],
+    [
+      "Embryology / Early Development",
+      34
+    ],
+    [
+      "General Surgery / Breast and Endocrine Surgery",
+      34
+    ],
+    [
+      "Emergency Medicine / Resuscitation and Shock",
+      33
+    ],
+    [
+      "Medical Biochemistry / Metabolism · Suggested",
+      33
+    ],
+    [
+      "General Surgery / Abdominal Surgery · Suggested",
+      32
+    ],
+    [
+      "Pediatrics and Child Health / Pediatric Infectious Diseases",
+      32
+    ],
+    [
+      "Histology / Connective and Muscle Tissues",
+      30
+    ],
+    [
+      "Internal Medicine / Nephrology",
+      30
+    ],
+    [
+      "General Surgery / Infectious Diseases",
+      30
+    ],
+    [
+      "ENT / Otology",
+      29
+    ],
+    [
+      "General Surgery / Neoplasia",
+      29
+    ],
+    [
+      "Neurology / Neurology",
+      28
+    ],
+    [
+      "Obstetrics and Gynecology / Obstetric Emergencies",
+      27
+    ],
+    [
+      "General Pathology / Systemic Pathology",
+      27
+    ],
+    [
+      "Histology / Organ Histology",
+      26
+    ],
+    [
+      "Emergency Medicine / Acute Emergencies",
+      26
+    ],
+    [
+      "Pharmacology / Renal Pharmacology",
+      26
+    ],
+    [
+      "Immunology / Innate Immunity",
+      25
+    ],
+    [
+      "Psychiatry / Psychotic Disorders",
+      24
+    ],
+    [
+      "Neurology / Seizure Disorders",
+      24
+    ],
+    [
+      "Medical Laboratory Sciences / Topic review required",
+      24
+    ],
+    [
+      "Pharmacology / Respiratory Pharmacology",
+      24
+    ],
+    [
+      "Medical Biochemistry / Lipid Metabolism",
+      23
+    ],
+    [
+      "Biostatistics and Research / Sample Size and Study Planning",
+      23
+    ],
+    [
+      "Community Medicine / Obstetrics",
+      22
+    ],
+    [
+      "Medical Biochemistry / Metabolic Pathways",
+      21
+    ],
+    [
+      "Immunology / Hypersensitivity and Autoimmunity",
+      21
+    ],
+    [
+      "Pharmacology / Gastrointestinal Pharmacology",
+      21
+    ],
+    [
+      "Human Anatomy / Back and Vertebral Column",
+      20
+    ],
+    [
+      "Medical Biochemistry / Carbohydrate Metabolism",
+      20
+    ],
+    [
+      "Pharmacology / Hematology",
+      20
+    ],
+    [
+      "Clinical Medicine / Topic review required",
+      20
+    ],
+    [
+      "Medical Biochemistry / Lipids",
+      19
+    ],
+    [
+      "Ophthalmology / Ophthalmic Disorders",
+      19
+    ],
+    [
+      "Medical Ethics and Law / Topic review required",
+      18
+    ],
+    [
+      "Biostatistics and Research / Biostatistics",
+      17
+    ],
+    [
+      "Pharmacology / Obstetrics",
+      17
+    ],
+    [
+      "Human Physiology / Respiratory Physiology",
+      16
+    ],
+    [
+      "Histology / Vascular Histology",
+      16
+    ],
+    [
+      "Histology / Lymphoid Tissue Histology",
+      16
+    ],
+    [
+      "Obstetrics and Gynecology / Gynecological Disorders",
+      16
+    ],
+    [
+      "ENT / Rhinology",
+      16
+    ],
+    [
+      "Psychiatry / Mood Disorders",
+      16
+    ],
+    [
+      "Internal Medicine / Infectious Diseases",
+      16
+    ],
+    [
+      "Radiography and Medical Imaging / Radiographic Interpretation",
+      15
+    ],
+    [
+      "Epidemiology / Study Designs and Measures",
+      15
+    ],
+    [
+      "General Surgery / Cardiovascular",
+      13
+    ],
+    [
+      "Public Health and Research / Obstetrics",
+      13
+    ],
+    [
+      "Medical Biochemistry / Topic review required",
+      12
+    ],
+    [
+      "Human Physiology / Endocrine Physiology",
+      12
+    ],
+    [
+      "Clinical Medicine / Obstetrics",
+      12
+    ],
+    [
+      "Community Medicine / Respiratory",
+      12
+    ],
+    [
+      "Community Medicine / Neurology",
+      12
+    ],
+    [
+      "ENT / Laryngology",
+      11
+    ],
+    [
+      "Embryology / Organogenesis",
+      11
+    ],
+    [
+      "General Surgery / Respiratory",
+      11
+    ],
+    [
+      "Pediatrics and Child Health / Growth and Development",
+      10
+    ],
+    [
+      "General Surgery / Hematology",
+      10
+    ],
+    [
+      "Emergency Medicine / Topic review required",
+      9
+    ],
+    [
+      "Medical Genetics / Mendelian Inheritance",
+      9
+    ],
+    [
+      "Development Studies / Social Development",
+      9
+    ],
+    [
+      "Orthopedics / Topic review required",
+      8
+    ],
+    [
+      "Radiography and Medical Imaging / Ultrasonography",
+      8
+    ],
+    [
+      "Parasitology / Topic review required",
+      8
+    ],
+    [
+      "Neurology / Movement and Neuromuscular",
+      8
+    ],
+    [
+      "Community Medicine / Hematology",
+      8
+    ],
+    [
+      "Community Medicine / Neoplasia",
+      8
+    ],
+    [
+      "Pediatrics and Child Health / Obstetrics",
+      8
+    ],
+    [
+      "Histology / Epithelium",
+      7
+    ],
+    [
+      "Human Physiology / Neurophysiology",
+      7
+    ],
+    [
+      "Medical Genetics / Chromosomal Disorders",
+      7
+    ],
+    [
+      "Dermatology / Inflammatory Skin Disorders",
+      7
+    ],
+    [
+      "General Surgery / Neurology",
+      7
+    ],
+    [
+      "General Surgery / Endocrinology",
+      7
+    ],
+    [
+      "General Surgery / Gynecology",
+      7
+    ],
+    [
+      "Community Medicine / Gastrointestinal",
+      7
+    ],
+    [
+      "Epidemiology / Obstetrics",
+      6
+    ],
+    [
+      "Clinical Medicine / Gynecology",
+      6
+    ],
+    [
+      "General Surgery / Obstetrics",
+      6
+    ],
+    [
+      "Histology / Skin Histology",
+      5
+    ],
+    [
+      "Microbiology / Topic review required",
+      5
+    ],
+    [
+      "Medical Biochemistry / Molecular Biology",
+      5
+    ],
+    [
+      "Medical Biochemistry / Nucleic Acids and Molecular Biology",
+      5
+    ],
+    [
+      "Pediatrics and Child Health / Pediatric Emergencies",
+      5
+    ],
+    [
+      "General Pathology / General Pathology",
+      5
+    ],
+    [
+      "Pharmacology / Infectious Diseases",
+      5
+    ],
+    [
+      "Epidemiology / Respiratory",
+      5
+    ],
+    [
+      "General Surgery / Renal and Urinary",
+      5
+    ],
+    [
+      "Community Medicine / Endocrinology",
+      5
+    ],
+    [
+      "Pediatrics and Child Health / Infectious Diseases",
+      5
+    ],
+    [
+      "Internal Medicine / Rheumatology",
+      4
+    ],
+    [
+      "General Surgery / Urology · Suggested",
+      4
+    ],
+    [
+      "Pharmacology / Gynecology",
+      4
+    ],
+    [
+      "Pharmacology / Neoplasia",
+      4
+    ],
+    [
+      "Epidemiology / Epidemiological Measures",
+      4
+    ],
+    [
+      "Community Medicine / Renal and Urinary",
+      4
+    ],
+    [
+      "Pediatrics and Child Health / Cardiovascular",
+      4
+    ],
+    [
+      "Histology / Bone Histology",
+      3
+    ],
+    [
+      "Human Physiology / Renal Physiology",
+      3
+    ],
+    [
+      "Community Health and Public Health / Environmental and Occupational Health",
+      3
+    ],
+    [
+      "Nursing / Topic review required",
+      3
+    ],
+    [
+      "Human Physiology / Cardiovascular Physiology",
+      3
+    ],
+    [
+      "Obstetrics and Gynecology / Gynecology · Suggested",
+      3
+    ],
+    [
+      "Unclassified Health Sciences / Neurology",
+      3
+    ],
+    [
+      "Histology / Skin Glands",
+      2
+    ],
+    [
+      "Microbiology / Mycology",
+      2
+    ],
+    [
+      "Microbiology / Diagnostic Microbiology",
+      2
+    ],
+    [
+      "Community Health and Public Health / Health Promotion",
+      2
+    ],
+    [
+      "Hematology / Hemostasis",
+      2
+    ],
+    [
+      "Pharmacology / Perioperative Care",
+      2
+    ],
+    [
+      "Epidemiology / Infectious Diseases",
+      2
+    ],
+    [
+      "Epidemiology / Renal and Urinary",
+      2
+    ],
+    [
+      "Clinical Medicine / Neoplasia",
+      2
+    ],
+    [
+      "Clinical Medicine / Renal and Urinary",
+      2
+    ],
+    [
+      "Public Health and Research / Hematology",
+      2
+    ],
+    [
+      "Public Health and Research / Topic review required",
+      2
+    ],
+    [
+      "Pediatrics and Child Health / Neurology",
+      2
+    ],
+    [
+      "Pediatrics and Child Health / Hematology",
+      2
+    ],
+    [
+      "Pediatrics and Child Health / Respiratory",
+      2
+    ],
+    [
+      "Pediatrics and Child Health / Gynecology",
+      2
+    ],
+    [
+      "Pediatrics and Child Health / Gastrointestinal",
+      2
+    ],
+    [
+      "Human Physiology / Integumentary Physiology",
+      1
+    ],
+    [
+      "Human Anatomy / Joints and Ligaments",
+      1
+    ],
+    [
+      "Medical Biochemistry / Vitamins and Minerals",
+      1
+    ],
+    [
+      "Neurology / Infections and Inflammation",
+      1
+    ],
+    [
+      "Psychiatry / Anxiety and Trauma-related Disorders",
+      1
+    ],
+    [
+      "Dermatology / Skin Infections",
+      1
+    ],
+    [
+      "Community Health and Public Health / Health Systems",
+      1
+    ],
+    [
+      "Medical Biochemistry / Acid Base and Buffers · Suggested",
+      1
+    ],
+    [
+      "Human Physiology / General Physiology",
+      1
+    ],
+    [
+      "Clinical Medicine / Infectious Diseases",
+      1
+    ],
+    [
+      "Epidemiology / Hematology",
+      1
+    ],
+    [
+      "Clinical Medicine / Respiratory",
+      1
+    ],
+    [
+      "Clinical Medicine / Epidemiological Measures",
+      1
+    ],
+    [
+      "Clinical Medicine / Hematology",
+      1
+    ],
+    [
+      "General Surgery / Breast and Endocrine Surgery · Suggested",
+      1
+    ],
+    [
+      "General Surgery / Epidemiological Measures",
+      1
+    ],
+    [
+      "Community Medicine / Gynecology",
+      1
+    ],
+    [
+      "Pediatrics and Child Health / Endocrinology",
+      1
+    ],
+    [
+      "Neurology / Gynecology",
+      1
+    ],
+    [
+      "Neurology / Perioperative Care",
+      1
+    ],
+    [
+      "Neurology / Cardiovascular",
+      1
+    ]
+  ],
+  "routingReasons": [
+    [
+      "source_subject_retained",
+      26965
+    ],
+    [
+      "explicit_drug_science_across_departments",
+      1441
+    ],
+    [
+      "explicit_pathological_process",
+      412
+    ],
+    [
+      "structural_content_across_departments",
+      328
+    ],
+    [
+      "explicit_clinical_specialty",
+      148
+    ],
+    [
+      "explicit_obstetric_gynecological_case",
+      110
+    ],
+    [
+      "explicit_statistical_question",
+      96
+    ],
+    [
+      "explicit_unclassified_discipline",
+      89
+    ],
+    [
+      "explicit_normal_function",
+      72
+    ],
+    [
+      "individually_reviewed_question",
+      45
+    ],
+    [
+      "neuroanatomy_mislabelled_neurology",
+      43
+    ],
+    [
+      "explicit_tissue_structure",
+      35
+    ],
+    [
+      "unresolved_nonanatomical_vignette",
+      35
+    ],
+    [
+      "vascular_anatomy_in_unclassified",
+      31
+    ],
+    [
+      "explicit_biochemical_question",
+      26
+    ],
+    [
+      "physiology_process_mislabelled_anatomy",
+      20
+    ],
+    [
+      "clinical_management_mislabelled_foundational",
+      20
+    ],
+    [
+      "anatomy_identified_in_unclassified",
+      19
+    ],
+    [
+      "explicit_structural_anatomy",
+      17
+    ],
+    [
+      "explicit_epidemiology_question",
+      15
+    ],
+    [
+      "clinical_case_mislabelled_anatomy",
+      14
+    ],
+    [
+      "classified_unassigned_clinical",
+      13
+    ],
+    [
+      "clinical_management_mislabelled_anatomy",
+      10
+    ],
+    [
+      "unresolved_management_mislabelled_foundational",
+      9
+    ],
+    [
+      "non_ent_structural_question",
+      8
+    ],
+    [
+      "explicit_development_question",
+      8
+    ],
+    [
+      "biochemistry_outside_pharmacology",
+      8
+    ],
+    [
+      "explicit_drug_focus",
+      7
+    ],
+    [
+      "unresolved_management_mislabelled_anatomy",
+      6
+    ],
+    [
+      "explicit_pediatric_case",
+      6
+    ],
+    [
+      "drug_focused_question_in_anatomy",
+      3
+    ],
+    [
+      "parasite_outside_anatomy",
+      2
+    ],
+    [
+      "pharmacology_mislabelled_foundational",
+      2
+    ],
+    [
+      "obstetrics_mislabelled_surgery",
+      2
+    ],
+    [
+      "research_ethics_mislabelled_pediatrics",
+      1
+    ],
+    [
+      "parasitology_mislabelled_surgery",
+      1
+    ],
+    [
+      "immunology_content_mislabelled_anatomy",
+      1
+    ]
+  ],
+  "reviewReasons": [
+    [
+      "missing_topic",
+      14312
+    ],
+    [
+      "source_subject_retained",
+      2763
+    ],
+    [
+      "explicit_pathological_process",
+      320
+    ],
+    [
+      "structural_content_across_departments",
+      94
+    ],
+    [
+      "explicit_clinical_specialty",
+      68
+    ],
+    [
+      "explicit_drug_science_across_departments",
+      65
+    ],
+    [
+      "explicit_statistical_question",
+      63
+    ],
+    [
+      "explicit_unclassified_discipline",
+      57
+    ],
+    [
+      "explicit_obstetric_gynecological_case",
+      41
+    ],
+    [
+      "explicit_tissue_structure",
+      32
+    ],
+    [
+      "explicit_normal_function",
+      28
+    ],
+    [
+      "explicit_biochemical_question",
+      15
+    ],
+    [
+      "explicit_epidemiology_question",
+      15
+    ],
+    [
+      "biochemistry_outside_pharmacology",
+      7
+    ],
+    [
+      "explicit_development_question",
+      5
+    ],
+    [
+      "clinical_case_mislabelled_anatomy",
+      3
+    ],
+    [
+      "parasite_outside_anatomy",
+      2
+    ],
+    [
+      "explicit_structural_anatomy",
+      1
+    ],
+    [
+      "explicit_pediatric_case",
+      1
+    ],
+    [
+      "neuroanatomy_mislabelled_neurology",
+      1
+    ],
+    [
+      "anatomy_identified_in_unclassified",
+      1
+    ]
+  ],
+  "sampleReviewIds": [
+    {
+      "id": "q-11b4617b335c",
+      "subject": "Ophthalmology",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-10d8322935e1",
+      "subject": "Human Anatomy",
+      "topic": "Upper Limb",
+      "why": "structural_content_across_departments"
+    },
+    {
+      "id": "q-2f6e8b8b0ec9",
+      "subject": "Ophthalmology",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-b4ac52e94d57",
+      "subject": "Human Anatomy",
+      "topic": "Thorax",
+      "why": "structural_content_across_departments"
+    },
+    {
+      "id": "q-263c7afc0920",
+      "subject": "Human Anatomy",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-c3965b7c8a76",
+      "subject": "Human Anatomy",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-acac5ec3424f",
+      "subject": "Human Anatomy",
+      "topic": "Lower Limb",
+      "why": "structural_content_across_departments"
+    },
+    {
+      "id": "q-e016afd821a7",
+      "subject": "Human Anatomy",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-10e137a06045",
+      "subject": "Human Anatomy",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-cf38ea8bfb48",
+      "subject": "Human Anatomy",
+      "topic": "Thorax",
+      "why": "structural_content_across_departments"
+    },
+    {
+      "id": "q-d3ba0fdb081e",
+      "subject": "Human Anatomy",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-3982207028cc",
+      "subject": "ENT",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-6292e7b7d667",
+      "subject": "Human Anatomy",
+      "topic": "Thorax",
+      "why": "structural_content_across_departments"
+    },
+    {
+      "id": "q-38117c6332d2",
+      "subject": "Human Anatomy",
+      "topic": "Thorax",
+      "why": "structural_content_across_departments"
+    },
+    {
+      "id": "q-c6aaa84f1f21",
+      "subject": "Human Anatomy",
+      "topic": "Thorax",
+      "why": "structural_content_across_departments"
+    },
+    {
+      "id": "q-a524af460bc9",
+      "subject": "Human Anatomy",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-b37470e31d76",
+      "subject": "Embryology",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-4320955f49d1",
+      "subject": "Human Anatomy",
+      "topic": "Thorax",
+      "why": "structural_content_across_departments"
+    },
+    {
+      "id": "q-b070cd3dd608",
+      "subject": "Human Anatomy",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-2202c1d85671",
+      "subject": "Human Anatomy",
+      "topic": "Abdomen",
+      "why": "structural_content_across_departments"
+    },
+    {
+      "id": "q-d7c5bfd6c6cd",
+      "subject": "Human Anatomy",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-2114597c4dcb",
+      "subject": "Human Anatomy",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-6f803bfbcecf",
+      "subject": "Human Anatomy",
+      "topic": "Abdomen",
+      "why": "structural_content_across_departments"
+    },
+    {
+      "id": "q-b03879b69da7",
+      "subject": "Human Anatomy",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-dbbe5da52b56",
+      "subject": "Human Anatomy",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-648a7edf6ff5",
+      "subject": "Human Anatomy",
+      "topic": "Abdomen",
+      "why": "structural_content_across_departments"
+    },
+    {
+      "id": "q-bce2035b4b6c",
+      "subject": "Human Anatomy",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-b2511763e73b",
+      "subject": "Human Anatomy",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-7d0222152600",
+      "subject": "Human Anatomy",
+      "topic": "Abdomen",
+      "why": "structural_content_across_departments"
+    },
+    {
+      "id": "q-63f55b100c9b",
+      "subject": "Human Anatomy",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-ea4de2255f4f",
+      "subject": "Radiography and Medical Imaging",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-66c4356eb8b1",
+      "subject": "Human Anatomy",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-e46d5d44f532",
+      "subject": "Human Anatomy",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-d5590432fb59",
+      "subject": "Human Anatomy",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-bf588c4c0041",
+      "subject": "Human Anatomy",
+      "topic": "Pelvis and Perineum",
+      "why": "structural_content_across_departments"
+    },
+    {
+      "id": "q-a376bc574b82",
+      "subject": "Human Anatomy",
+      "topic": "Pelvis and Perineum",
+      "why": "structural_content_across_departments"
+    },
+    {
+      "id": "q-f74fda1cf9ad",
+      "subject": "Human Anatomy",
+      "topic": "Pelvis and Perineum",
+      "why": "structural_content_across_departments"
+    },
+    {
+      "id": "q-445700e2e5a7",
+      "subject": "Human Anatomy",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-31fbbb2625c3",
+      "subject": "Human Anatomy",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-2fea7034a3b3",
+      "subject": "Human Anatomy",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-c0e46b33eb78",
+      "subject": "Human Anatomy",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-7536d4d82b32",
+      "subject": "Ophthalmology",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-1ff3ff0d1ffd",
+      "subject": "Human Anatomy",
+      "topic": "Head and Neck",
+      "why": "structural_content_across_departments"
+    },
+    {
+      "id": "q-5e677573d983",
+      "subject": "Human Anatomy",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-efab6ca579be",
+      "subject": "Human Anatomy",
+      "topic": "Head and Neck",
+      "why": "structural_content_across_departments"
+    },
+    {
+      "id": "q-6b77e0a6bc5d",
+      "subject": "Human Anatomy",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-51e16575cc5a",
+      "subject": "Human Anatomy",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-ac45fef25e4f",
+      "subject": "Human Anatomy",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-2ed9c62fe5d7",
+      "subject": "Human Anatomy",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-ae0bf629fb96",
+      "subject": "Human Anatomy",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-0c2c393ef349",
+      "subject": "Human Anatomy",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-e9ca29a39c2e",
+      "subject": "Human Anatomy",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-5cc2c54e5109",
+      "subject": "Human Anatomy",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-b949bcb82a18",
+      "subject": "Human Anatomy",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-7747b18c81b7",
+      "subject": "Human Anatomy",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-542b936e3328",
+      "subject": "Human Anatomy",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-6d90bc3c978e",
+      "subject": "Human Anatomy",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-ec0d69d06be0",
+      "subject": "Human Anatomy",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-e42747a88c50",
+      "subject": "Human Anatomy",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    },
+    {
+      "id": "q-d6116764edf3",
+      "subject": "Human Anatomy",
+      "topic": "Topic review required",
+      "why": "source_subject_retained"
+    }
+  ],
+  "sampleDuplicateIds": [
+    {
+      "id": "q-dd00b4e69974",
+      "duplicateOf": "q-bc8f006a018c"
+    },
+    {
+      "id": "q-cd55c2ca2d3c",
+      "duplicateOf": "q-28f134143b82"
+    },
+    {
+      "id": "q-ba0eb5ff108a",
+      "duplicateOf": "q-705fbf27e742"
+    },
+    {
+      "id": "q-3d0a64a74a68",
+      "duplicateOf": "q-6e8fed0a354b"
+    },
+    {
+      "id": "q-4b5b608cc3a8",
+      "duplicateOf": "q-866122b5b7e3"
+    },
+    {
+      "id": "q-7638ba36f12f",
+      "duplicateOf": "q-199711ff8ad5"
+    },
+    {
+      "id": "q-aba6b6ef5987",
+      "duplicateOf": "q-a36f68103d6b"
+    },
+    {
+      "id": "q-b22498a11035",
+      "duplicateOf": "q-686ca3d3cb88"
+    },
+    {
+      "id": "q-3ecbc1d41c94",
+      "duplicateOf": "q-9486887058cc"
+    },
+    {
+      "id": "q-87669b9178ac",
+      "duplicateOf": "q-91cb39349f27"
+    },
+    {
+      "id": "q-ef07d6b8bc44",
+      "duplicateOf": "q-149e7a51e645"
+    },
+    {
+      "id": "q-886f0b58b4e5",
+      "duplicateOf": "q-b03bcfe3761f"
+    },
+    {
+      "id": "q-933856d81e24",
+      "duplicateOf": "q-e3437dc7a48e"
+    },
+    {
+      "id": "q-f9c5c5101fd8",
+      "duplicateOf": "q-839a35d46b2e"
+    },
+    {
+      "id": "q-7f6c1dc7368c",
+      "duplicateOf": "q-28cf07c7af04"
+    },
+    {
+      "id": "q-c6e04ac84be2",
+      "duplicateOf": "q-2065d9c40266"
+    },
+    {
+      "id": "q-a6abc64654f4",
+      "duplicateOf": "q-644492c58611"
+    },
+    {
+      "id": "q-0010ca61c054",
+      "duplicateOf": "q-1b1b7d81e704"
+    },
+    {
+      "id": "q-a42147cc1434",
+      "duplicateOf": "q-c92254bdaebe"
+    },
+    {
+      "id": "q-b9a25f494ee2",
+      "duplicateOf": "q-06d11b9b7050"
+    },
+    {
+      "id": "q-eeec77cc80f5",
+      "duplicateOf": "q-6ab6edfa9ec6"
+    },
+    {
+      "id": "q-3d8067e41dc6",
+      "duplicateOf": "q-73c889f34aee"
+    },
+    {
+      "id": "q-d0a580f54bd7",
+      "duplicateOf": "q-4b42b44cbc5f"
+    },
+    {
+      "id": "q-c8de687b442c",
+      "duplicateOf": "q-e9a4fdef30bc"
+    },
+    {
+      "id": "q-0eb381e6c0be",
+      "duplicateOf": "q-bf84d1973515"
+    },
+    {
+      "id": "q-ba5738015e62",
+      "duplicateOf": "q-72eaef7f51b3"
+    },
+    {
+      "id": "q-854be21a0ecd",
+      "duplicateOf": "q-23351491de28"
+    },
+    {
+      "id": "q-b557a8e82ebf",
+      "duplicateOf": "q-60816cc147d3"
+    },
+    {
+      "id": "q-e92390811a3c",
+      "duplicateOf": "q-28897d01a86d"
+    },
+    {
+      "id": "q-33f035ed6a61",
+      "duplicateOf": "q-ce291c8b36b5"
+    }
+  ]
+}

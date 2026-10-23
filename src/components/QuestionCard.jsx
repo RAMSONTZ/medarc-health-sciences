@@ -36,6 +36,7 @@ function Explanation({answer}) {
       {answer.answerText&&<p className="answer-text">{answer.answerText}</p>}
       <p>{answer.explanation||'No explanatory rationale has been supplied for this draft.'}</p>
       {Object.keys(optionReasons).length>0&&<div className="option-reasons">{Object.entries(optionReasons).map(([key,value])=><p key={key}><b>{key}.</b> {value}</p>)}</div>}
+      {answer.references?.length>0&&<p className="answer-references">Sources: {answer.references.map((ref,i)=><span key={ref.url||i}>{i>0?' · ':''}{ref.url?<a href={ref.url} target="_blank" rel="noopener noreferrer">{ref.title||'Reference'}</a>:ref.title}</span>)}</p>}
     </div>
     <p className="answer-quality-note">Educational draft: independent clinical verification is pending. Imported source keys are not used for scoring.</p>
   </div>;

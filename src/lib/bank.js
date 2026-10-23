@@ -4,12 +4,16 @@ import path from 'node:path';
 import {assessQuestionQuality} from './question-quality.mjs';
 import {isClinicalManagementQuestion} from './department-routing.mjs';
 import {curateQuestion,duplicateKey} from './question-curation.mjs';
+import {prepareLearningBank} from './question-presentation.mjs';
 
 let memo;
 export function getBank() {
   if (!memo) {
     const file = path.join(process.cwd(), 'data', 'bank.json');
     memo = JSON.parse(fs.readFileSync(file, 'utf8'));
+    memo.sourceQuestionById=new Map(memo.questions.map(q=>[q.id,q]));
+    memo.sourceAnswerCount=Object.keys(memo.answers||{}).length;
+    Object.assign(memo,prepareLearningBank(memo));
     memo.questionById = new Map(memo.questions.map(q => [q.id, q]));
     memo.examById = new Map(memo.exams.map(x => [x.id, x]));
     memo.departmentById=new Map();

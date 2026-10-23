@@ -6,9 +6,9 @@ import {fileURLToPath,pathToFileURL} from 'node:url';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const bank=JSON.parse(fs.readFileSync(path.join(root,'data','bank.json'), 'utf8'));
-const qmap=new Map(bank.questions.map(q=>[q.id,q]));
+let qmap=new Map(bank.questions.map(q=>[q.id,q]));
 const examMap=new Map(bank.exams.map(e=>[e.id,e]));
-const ANSWERS=bank.answers||{};
+let ANSWERS=bank.answers||{};
 const {assessQuestionQuality}=await import(pathToFileURL(path.join(root,'src/lib/question-quality.mjs')));
 let usableQuestions;
 let usableIDs;
@@ -18,9 +18,12 @@ let usableAnswered;
 const source=fs.readFileSync(path.join(root,'src/lib/bank.js'), 'utf8').replace(/^import 'server-only';\s*/m,'')
   .replace("from './question-quality.mjs';", "from '"+pathToFileURL(path.join(root,'src/lib/question-quality.mjs')).href+"';")
   .replace("from './department-routing.mjs';", "from '"+pathToFileURL(path.join(root,'src/lib/department-routing.mjs')).href+"';")
+  .replace("from './question-presentation.mjs';", "from '"+pathToFileURL(path.join(root,'src/lib/question-presentation.mjs')).href+"';")
   .replace("from './question-curation.mjs';", "from '"+pathToFileURL(path.join(root,'src/lib/question-curation.mjs')).href+"';");
 const lib=await import(`data:text/javascript;base64,${Buffer.from(source).toString('base64')}`);
-usableQuestions=bank.questions.filter(q=>assessQuestionQuality(q).status!=='quarantined'&&!lib.getBank().duplicateOf.has(q.id));
+qmap=lib.getBank().questionById;
+ANSWERS=lib.getBank().answers;
+usableQuestions=lib.getBank().questions.filter(q=>assessQuestionQuality(q).status!=='quarantined'&&!lib.getBank().duplicateOf.has(q.id));
 usableIDs=new Set(usableQuestions.map(q=>q.id));
 usableAnswered=usableQuestions.filter(q=>ANSWERS[q.id]).length;
 

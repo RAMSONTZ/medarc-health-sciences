@@ -9,11 +9,14 @@ const source=fs.readFileSync(path.join(process.cwd(),'src/lib/bank.js'),'utf8')
   .replace(/^import 'server-only';\s*/m,'')
   .replace("from './question-quality.mjs';", "from '"+pathToFileURL(path.join(process.cwd(),'src/lib/question-quality.mjs')).href+"';")
   .replace("from './department-routing.mjs';", "from '"+pathToFileURL(path.join(process.cwd(),'src/lib/department-routing.mjs')).href+"';")
+  .replace("from './question-presentation.mjs';", "from '"+pathToFileURL(path.join(process.cwd(),'src/lib/question-presentation.mjs')).href+"';")
   .replace("from './question-curation.mjs';", "from '"+pathToFileURL(path.join(process.cwd(),'src/lib/question-curation.mjs')).href+"';");
 const lib=await import(`data:text/javascript;base64,${Buffer.from(source).toString('base64')}`);
 const bank=lib.getBank();
 const expected=lib.getStats();
-assert.deepEqual(expected,{questions:30068,exams:1201,answered:2325});
+assert.equal(expected.questions,30068);assert.equal(expected.exams,1201);
+assert.equal(bank.sourceAnswerCount,2325);
+assert.equal(expected.answered,Object.keys(bank.answers).length);
 assert.equal(bank.questionById.size,expected.questions);
 assert.equal(bank.examById.size,expected.exams);
 assert.ok(bank.types.includes('Single Best Answer MCQ'));
