@@ -40,6 +40,6 @@ test('question feedback shows contextual encouragement without implying medicall
   assert.match(question,/16_positive_feedback_good_work\.webp/);
   assert.match(question,/18_motivation_dont_give_up\.webp/);
   assert.match(question,/20_motivation_you_can_do_it\.webp/);
-  assert.match(question,/Matches the prepared answer/);
+  assert.match(question,/Correct/);
   assert.match(question,/Education only/);
 });

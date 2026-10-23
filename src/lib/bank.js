@@ -6,6 +6,10 @@ import {isClinicalManagementQuestion} from './department-routing.mjs';
 import {curateQuestion,duplicateKey} from './question-curation.mjs';
 import {prepareLearningBank} from './question-presentation.mjs';
 
+// Learner payloads intentionally omit explanation and reference metadata for this phase.
+function learnerAnswer(answer){
+  return answer?{correct:answer.correct,answerText:answer.answerText,reviewStatus:answer.reviewStatus}:null;
+}
 let memo;
 export function getBank() {
   if (!memo) {
@@ -144,7 +148,7 @@ export function getQuestions(params = {}, answeredOnly = false, subjectLock = ''
       id:q.id,stem:q.stem,subject:department.subject,topic:department.topic,type:q.type,
       sourceSubject:department.sourceSubject,departmentReview:department.review,
       options:q.options||[],status:q.answerAuditStatus||q.status,
-      priority:q.priority,answer:b.answers[q.id]||null
+      priority:q.priority,answer:learnerAnswer(b.answers[q.id])
     };
   });
   let topics=[];
@@ -180,7 +184,7 @@ export function getExam(id,position=1) {
   const pos=Math.min(intParam(position),visibleIds.length);
   const source=b.questionById.get(visibleIds[pos-1]);
   const dep=source?b.departmentById.get(source.id):null;
-  const q=source?{id:source.id,stem:source.stem,subject:dep.subject,topic:dep.topic,sourceSubject:dep.sourceSubject,departmentReview:dep.review,type:source.type,options:source.options||[],status:source.answerAuditStatus||source.status,answer:b.answers[source.id]||null}:null;
+  const q=source?{id:source.id,stem:source.stem,subject:dep.subject,topic:dep.topic,sourceSubject:dep.sourceSubject,departmentReview:dep.review,type:source.type,options:source.options||[],status:source.answerAuditStatus||source.status,answer:learnerAnswer(b.answers[source.id])}:null;
   return {exam:{id:exam.id,title:exam.title,subject:exam.subject,total:visibleIds.length,archivedTotal:exam.questionIds.length},question:q,pos};
 }
 export function getAudit(pageRaw=1) {

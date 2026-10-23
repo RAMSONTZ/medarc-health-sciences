@@ -18,3 +18,14 @@ export function evaluateAnswer(answer, selection, {written=false, multiple=false
   const same=selection===key;
   return {status:same?'matches_prepared_key':'differs_from_prepared_key',matches:same};
 }
+
+/** Color only usable graded choices; unkeyed responses stay neutral. */
+export function optionFeedback(answer,label,selection,{checked=false,multiple=false}={}){
+  if(!checked)return '';
+  const result=evaluateAnswer(answer,selection,{multiple});
+  if(result.matches===null)return '';
+  const expected=Array.isArray(answer.correct)?answer.correct:[answer.correct];
+  if(expected.includes(label))return 'option-correct';
+  const selected=Array.isArray(selection)?selection.includes(label):selection===label;
+  return selected?'option-incorrect':'';
+}

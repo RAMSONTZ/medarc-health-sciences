@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {test} from 'node:test';
-import {evaluateAnswer} from '../src/lib/scoring.js';
+import {evaluateAnswer,optionFeedback} from '../src/lib/scoring.js';
 
 test('single-response answers match or differ from a prepared draft key',()=>{
   assert.deepEqual(evaluateAnswer({correct:'B'},'B'),{status:'matches_prepared_key',matches:true});
@@ -22,4 +22,20 @@ test('multi-response questions without a multi-response key are unscored',()=>{
 });
 test('written questions are self-assessed and not auto-graded',()=>{
   assert.deepEqual(evaluateAnswer({answerText:'Mitral valve'},'Mitral valve',{written:true}),{status:'self_assess',matches:null});
+});
+
+test('single-response feedback colors the key green and a selected wrong choice red',()=>{
+  const a={correct:'B'};
+  assert.equal(optionFeedback(a,'B','A',{checked:true}),'option-correct');
+  assert.equal(optionFeedback(a,'A','A',{checked:true}),'option-incorrect');
+  assert.equal(optionFeedback(a,'C','A',{checked:true}),'');
+  assert.equal(optionFeedback(a,'B','B',{checked:false}),'');
+  assert.equal(optionFeedback(null,'A','A',{checked:true}),'');
+});
+test('multi-response feedback waits for submission and marks every expected choice',()=>{
+  const a={correct:['A','C']};
+  for(const label of ['A','C'])assert.equal(optionFeedback(a,label,['A','B'],{checked:true,multiple:true}),'option-correct');
+  assert.equal(optionFeedback(a,'B',['A','B'],{checked:true,multiple:true}),'option-incorrect');
+  assert.equal(optionFeedback(a,'A',['A'],{checked:false,multiple:true}),'');
+  assert.equal(optionFeedback({correct:'A'},'A',['A'],{checked:true,multiple:true}),'');
 });

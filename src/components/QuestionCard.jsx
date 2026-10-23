@@ -1,7 +1,7 @@
 'use client';
 import {useCallback, useEffect, useState} from 'react';
 import {Icon} from './Icons';
-import {evaluateAnswer} from '@/lib/scoring';
+import {evaluateAnswer,optionFeedback} from '@/lib/scoring';
 
 // Deliberately separate learner attempts from the original source answer keys.
 // The saved response is never evidence that an answer is correct.
@@ -28,19 +28,6 @@ function clearAttempt(id) {
     window.dispatchEvent(new Event('medarc:progress'));
   } catch {}
 }
-function Explanation({answer}) {
-  const optionReasons=answer.optionReasons||answer.optionRationales||{};
-  return <div className="explanation">
-    <b className="explanation-label">PREPARED ANSWER & EXPLANATION</b>
-    <div className="explanation-body">
-      {answer.answerText&&<p className="answer-text">{answer.answerText}</p>}
-      <p>{answer.explanation||'No explanatory rationale has been supplied for this draft.'}</p>
-      {Object.keys(optionReasons).length>0&&<div className="option-reasons">{Object.entries(optionReasons).map(([key,value])=><p key={key}><b>{key}.</b> {value}</p>)}</div>}
-      {answer.references?.length>0&&<p className="answer-references">Sources: {answer.references.map((ref,i)=><span key={ref.url||i}>{i>0?' · ':''}{ref.url?<a href={ref.url} target="_blank" rel="noopener noreferrer">{ref.title||'Reference'}</a>:ref.title}</span>)}</p>}
-    </div>
-    <p className="answer-quality-note">Educational draft: independent clinical verification is pending. Imported source keys are not used for scoring.</p>
-  </div>;
-}
 export function QuestionCard({question,index=1,compact=false}) {
   const {id,options=[],answer}=question;
   const [choice,setChoice]=useState('');
@@ -51,7 +38,8 @@ export function QuestionCard({question,index=1,compact=false}) {
   const isWritten=options.length===0;
   const isMultiple=question.type==='Multiple Response';
   const key=answer?.correct;
-  const hasKey=Boolean(answer)&&(!isWritten?(Array.isArray(key)?key.length>0:Boolean(key)):true);
+  const usableKey=Array.isArray(key)?isMultiple&&key.length>0&&new Set(key).size===key.length:!isMultiple&&typeof key==='string'&&key.length>0;
+  const hasKey=isWritten?Boolean(answer?.answerText):Boolean(answer)&&usableKey&&(Array.isArray(key)?key:[key]).every(k=>options.some(o=>o.label===k));
 
   useEffect(()=>{
     const stored=readAttempt(id);
@@ -97,17 +85,17 @@ export function QuestionCard({question,index=1,compact=false}) {
     <div className="question-heading">
       <div className="question-index">Q{index}</div>
       <div className="question-tags"><span>{question.subject}</span>{question.topic&&<span>{question.topic}</span>}<span>{question.type||'Question'}</span></div>
-      <span className={`question-state ${hasKey?'ready':'pending'}`}>{hasKey?'Provisional answer':'Answer pending'}</span>
+      <span className={`question-state ${hasKey?'ready':'pending'}`}>{hasKey?'Answer available':'Answer pending'}</span>
     </div>
     <h3 id={`stem-${id}`} className="question-stem">{question.stem}</h3>
     {isWritten?<>
-      <p className="written-instruction">Free-response question. Compare your own reasoning with the provisional model answer; written text is not auto-graded.</p>
+      <p className="written-instruction">Free-response question. Compare your own reasoning with the model answer; written text is not auto-graded.</p>
       <textarea rows={4} className="written-input" aria-label="Your written response" value={written} onChange={e=>setWritten(e.target.value)} placeholder="Write your response here"/>
       <div className="question-controls"><button className="button button-outline" onClick={showWritten} type="button"><Icon name="book" size={16}/> Reveal model answer</button><button className="question-reset" onClick={reset} type="button">Clear attempt</button></div>
     </>:<>
       <div className="answer-options" role="group" aria-label={`Answer options for question ${index}`}>{options.map(o=>{
         const selected=Array.isArray(choice)?choice.includes(o.label):choice===o.label;
-        return <label key={`${id}-${o.label}`} className={`answer-option ${selected?'chosen':''} ${checked&&hasKey&&o.label===key&&!isMultiple?'option-correct':''}`}>
+        return <label key={`${id}-${o.label}`} className={`answer-option ${selected?'chosen':''} ${optionFeedback(answer,o.label,choice,{checked:checked&&hasKey,multiple:isMultiple})}`}>
           <input type={isMultiple?'checkbox':'radio'} name={id} value={o.label} checked={selected} onChange={()=>isMultiple?toggle(o.label):choose(o.label)}/>
           <span className="option-letter">{o.label}</span><span className="option-content">{o.text}</span>
         </label>;
@@ -116,11 +104,11 @@ export function QuestionCard({question,index=1,compact=false}) {
       {!isMultiple&&choice&&<div className="question-controls"><button className="question-reset" type="button" onClick={reset}>Try again</button></div>}
     </>}
     {storageReady&&checked&&!isWritten&&<div role="status" aria-live="polite" className={`answer-feedback medarc-illustrated-feedback ${hasKey?(isRight?'is-correct':'is-incorrect'):'is-pending'}`}>
-      <div className="medarc-feedback-heading"><div className="feedback-intro"><Icon name={hasKey&&isRight?'check':'shield'} size={17}/><b>{hasKey?(isRight?'Matches the prepared answer':'Different from the prepared answer'):'Response saved — not graded'}</b></div><img className="feedback-visual" src={hasKey?(isRight?'/medarc/visuals/16_positive_feedback_good_work.webp':'/medarc/visuals/18_motivation_dont_give_up.webp'):'/medarc/visuals/20_motivation_you_can_do_it.webp'} alt="" aria-hidden="true" width="108" height="90" loading="lazy"/></div>
-      {hasKey?<><p>Provisional answer: <strong>{presentedCorrect}</strong>{!Array.isArray(key)&&optionMap[key]?` — ${optionMap[key]}`:''}</p><Explanation answer={answer}/></>:<p>This question does not yet have a usable answer key and is not scored.</p>}
+      <div className="medarc-feedback-heading"><div className="feedback-intro"><Icon name={hasKey&&isRight?'check':'shield'} size={17}/><b>{hasKey?(isRight?'Correct':'Incorrect'):'Response saved — not graded'}</b></div><img className="feedback-visual" src={hasKey?(isRight?'/medarc/visuals/16_positive_feedback_good_work.webp':'/medarc/visuals/18_motivation_dont_give_up.webp'):'/medarc/visuals/20_motivation_you_can_do_it.webp'} alt="" aria-hidden="true" width="108" height="90" loading="lazy"/></div>
+      {hasKey?<p>Correct answer: <strong>{presentedCorrect}</strong>{Array.isArray(key)?` — ${key.map(k=>optionMap[k]).join('; ')}`:optionMap[key]?` — ${optionMap[key]}`:''}</p>:<p>This question does not yet have a usable answer key and is not scored.</p>}
     </div>}
-    {isWritten&&reveal&&<div className="answer-feedback is-pending" role="status"><div className="medarc-feedback-heading"><div className="feedback-intro"><Icon name="book" size={17}/><b>Compare your reasoning</b></div><img className="feedback-visual" src="/medarc/visuals/20_motivation_you_can_do_it.webp" alt="" aria-hidden="true" width="108" height="90" loading="lazy"/></div>{answer?<Explanation answer={answer}/>:<p>A model answer has not yet been prepared for this question. Your response has not been graded.</p>}</div>}
-    {hasKey&&!isWritten&&!checked&&<p className="question-hint">{isMultiple?'Choose every applicable option, then press “Check selected answers”.':'Choose an option to view immediate feedback and a provisional explanation.'}</p>}
+    {isWritten&&reveal&&<div className="answer-feedback is-pending" role="status"><div className="medarc-feedback-heading"><div className="feedback-intro"><Icon name="book" size={17}/><b>Model answer</b></div><img className="feedback-visual" src="/medarc/visuals/20_motivation_you_can_do_it.webp" alt="" aria-hidden="true" width="108" height="90" loading="lazy"/></div>{answer?.answerText?<p className="answer-text">{answer.answerText}</p>:<p>A model answer has not yet been prepared for this question. Your response has not been graded.</p>}</div>}
+    {hasKey&&!isWritten&&!checked&&<p className="question-hint">{isMultiple?'Choose every applicable option, then press “Check selected answers”.':'Choose an option to check your answer.'}</p>}
     <div className="question-bottom"><span>Record ID · {id}</span><span>Education only · Answer verification pending</span></div>
   </article>;
 }
