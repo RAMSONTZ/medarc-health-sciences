@@ -4,11 +4,12 @@ import {prepareLearningBank} from '../src/lib/question-presentation.mjs';
 const source=JSON.parse(fs.readFileSync(path.join(process.cwd(),'data/bank.json'),'utf8'));
 const bank={...source,...prepareLearningBank(source)};
 const byId=new Map(bank.questions.map(q=>[q.id,q]));
-const summary={totalQuestions:bank.questions.length,exams:bank.exams.length,answerRecords:0,writtenModelAnswers:0,mcqAnswerRecords:0,invalidChoiceMappings:0,missingExplanations:0,incompleteOptionRationales:0};
+const summary={totalQuestions:bank.questions.length,exams:bank.exams.length,answerRecords:0,writtenModelAnswers:0,mcqAnswerRecords:0,invalidChoiceMappings:0,missingExplanations:0,answerOnlyRecords:0,incompleteOptionRationales:0};
 for(const [id,answer] of Object.entries(bank.answers||{})){
   const q=byId.get(id);summary.answerRecords++;
   if(!q)throw new Error(`Answer ${id} has no source record`);
-  if(!answer.explanation?.trim())summary.missingExplanations++;
+  if(answer.reviewStatus==='answer_key_checked'&&answer.explanationsDeferred===true)summary.answerOnlyRecords++;
+  else if(!answer.explanation?.trim())summary.missingExplanations++;
   if(!(q.options||[]).length){summary.writtenModelAnswers++;continue;}
   summary.mcqAnswerRecords++;
   const labels=new Set(q.options.map(o=>o.label));

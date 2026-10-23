@@ -21,6 +21,20 @@ function parseInlineChoices(stem){
  if(options.some(o=>!o.text))return null;
  return {stem:prompt,options};
 }
+
+// Repair only known split OCR words; keep clinical hyphens, doses and ages intact.
+const splitWords={
+ 'trans- verse':'transverse','inter- costal':'intercostal','anter- ior':'anterior',
+ 'interverte- bral':'intervertebral','oesopha- gus':'oesophagus','thor- acic':'thoracic',
+ 'interven- tricular':'interventricular','cor- onary':'coronary','transpy- loric':'transpyloric',
+ 'bifurca- tion':'bifurcation','sur- face':'surface','infer- ior':'inferior',
+ 'super- ior':'superior','fis- sure':'fissure','liga- mentum':'ligamentum',
+ 'atrio- ventricular':'atrioventricular','media- stinum':'mediastinum'
+};
+function repairSplitWords(text){
+ return String(text||'').replace(/\b(?:trans- verse|inter- costal|anter- ior|interverte- bral|oesopha- gus|thor- acic|interven- tricular|cor- onary|transpy- loric|bifurca- tion|sur- face|infer- ior|super- ior|fis- sure|liga- mentum|atrio- ventricular|media- stinum)\b/g,m=>splitWords[m]);
+}
+
 export function prepareLearningQuestion(source){
  const q={...source,options:(source.options||[]).map(o=>({...o}))};
  const changes=[],extracted=[],blocked=[];
@@ -90,6 +104,11 @@ export function prepareLearningQuestion(source){
  if(/^\s*\d*\s*(?:UPPER\s*)?[a-e][.)]?\s*The statement is correct|^\s*\d+\s+[a-e]\s+The .+?jerk|\bExplanations\s*$/i.test(stem))blocked.push('explanation_page_import');
  if(!genuinePrompt(stem)&&changes.length&&!q.options.length)blocked.push('incomplete_prompt_after_cleanup');
  if(new Set(q.options.map(o=>o.label)).size!==q.options.length)blocked.push('interleaved_or_duplicate_option_labels');
+ const unnumbered=stem.replace(/^\d+[.)]?\s+(?=(?:Which|What|Where|When|Why|How|Who|Describe|Define|List|Outline|Explain|Calculate|Identify|Name|Select|Choose)\b)/i,'');
+ if(unnumbered!==stem){stem=unnumbered;changes.push('imported_question_number_removed');}
+ const repaired=repairSplitWords(stem);
+ if(repaired!==stem){stem=repaired;changes.push('split_ocr_word_repaired');}
+ q.options=q.options.map(o=>{const text=repairSplitWords(o.text);if(text!==o.text)changes.push('split_ocr_word_repaired');return {...o,text};});
  q.stem=stem;
  q.editorialBlockedReasons=[...new Set(blocked)];
  q.presentationChanges=[...new Set(changes)];

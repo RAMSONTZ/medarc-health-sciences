@@ -72,7 +72,7 @@ test('all answer references resolve to the exact question option labels',()=>{
       const keys=Array.isArray(a.correct)?a.correct:[a.correct];
       for (const key of keys) assert.ok(options.includes(key),`Bad option ${id}: ${key}`);
     }
-    assert.ok(String(a.explanation||'').trim().length>0,`Missing explanation: ${id}`);
+    assert.ok((a.reviewStatus==='answer_key_checked'&&a.explanationsDeferred===true)||String(a.explanation||'').trim().length>0,`Missing explanation or explicit deferral: ${id}`);
   }
 });
 
@@ -103,4 +103,16 @@ test('source and formatted exam routes are present and account for all official 
     'src/app/answers/page.jsx','src/app/exams/page.jsx','src/app/exams/[id]/page.jsx',
     'src/app/anatomy/page.jsx','src/app/review/page.jsx'];
   for (const rel of expected) assert.ok(fs.existsSync(path.join(root,rel)),`Missing route: ${rel}`);
+});
+
+test('learner practice and exam payloads omit citations and explanations',()=>{
+  for(const q of lib.getQuestions({},true).questions){
+    assert.equal(q.answer.references,undefined);
+    assert.equal(q.answer.explanation,undefined);
+    assert.equal(q.answer.optionReasons,undefined);
+  }
+  for(const ex of bank.exams.slice(0,30)){
+    const a=lib.getExam(ex.id,1)?.question?.answer;
+    if(a){assert.equal(a.references,undefined);assert.equal(a.explanation,undefined);}
+  }
 });

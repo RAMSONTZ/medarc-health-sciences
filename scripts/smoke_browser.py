@@ -13,7 +13,7 @@ import asyncio
 import json
 import sys
 from pathlib import Path
-from playwright.async_api import async_playwright
+from playwright.async_api import async_playwright, expect
 
 BASE=(sys.argv[1] if len(sys.argv)>1 else 'http://localhost:3000').rstrip('/')
 ROUTES=['/','/topics','/topics/Human%20Anatomy','/practice','/answers','/exams','/anatomy','/review','/visual-learning','/group-exams']
@@ -96,7 +96,8 @@ async def check_answers(page):
         if await submit.count():await submit.click()
         assert await card.locator('.answer-feedback').count(),'Missing answer feedback'
         answer_text=await card.locator('.answer-feedback').inner_text()
-        assert 'PREPARED ANSWER' in answer_text or 'prepared answer' in answer_text.lower(),answer_text[:180]
+        assert 'Correct answer:' in answer_text,answer_text[:180]
+        assert await card.locator('.explanation, .answer-references').count() == 0
     else:
         await card.get_by_role('button',name='Reveal model answer').click()
         assert await card.locator('.answer-feedback').count(),'Missing model answer'
@@ -108,6 +109,24 @@ async def check_answers(page):
     assert await card.count(),'Answer missing after reload'
     if await card.locator('.answer-option input').count():
         assert await card.locator('.answer-option input:checked').count(),'Saved answer did not rehydrate'
+
+
+async def check_answer_colors(page):
+    await page.goto(BASE+'/answers?q=Which%20statement%20about%20the%20ribs%20is%20accurate',wait_until='domcontentloaded')
+    card=page.locator('[aria-labelledby="stem-q-008d865112bb"]')
+    assert await card.count(), 'Reviewed ribs question missing from answer library'
+    await card.locator('input[value="B"]').check()
+    assert await card.locator('.answer-feedback.is-correct').count() == 1
+    assert await card.locator('.answer-option.option-correct input[value="B"]').count() == 1
+    await expect(card.locator('.answer-option.option-correct')).to_have_css('background-color','rgb(236, 253, 243)')
+    await card.locator('input[value="A"]').check()
+    assert await card.locator('.answer-feedback.is-incorrect').count() == 1
+    assert await card.locator('.answer-option.option-incorrect input[value="A"]').count() == 1
+    await expect(card.locator('.answer-option.option-incorrect')).to_have_css('background-color','rgb(254, 242, 242)')
+    assert await card.locator('.answer-feedback a, .explanation, .answer-references').count() == 0
+    await page.evaluate("document.documentElement.dataset.theme='dark'")
+    await expect(card.locator('.answer-option.option-incorrect')).to_have_css('background-color','rgb(70, 28, 36)')
+    await page.evaluate("document.documentElement.dataset.theme='light'")
 
 async def check_profile(page):
     await page.goto(BASE,wait_until='domcontentloaded')
@@ -155,6 +174,7 @@ async def main():
             await check_search(page)
             await check_exam(page)
             await check_answers(page)
+            await check_answer_colors(page)
             await check_profile(page)
             if viewport['width']==390:await check_mobile_nav(page)
             await context.close()
