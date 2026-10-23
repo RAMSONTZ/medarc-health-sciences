@@ -14,6 +14,7 @@ export function assessQuestionQuality(question) {
   const options=Array.isArray(q.options)?q.options:[];
   const fields=[stem,...options.map(o=>typeof o?.text==='string'?o.text:'')];
   const reasons=[];
+  reasons.push(...(q.editorialBlockedReasons||[]));
   const review=[];
   if(!stem || stem.length<12 || !/[a-z]{3}/i.test(stem)) reasons.push('missing_or_unreadable_question');
   if(fields.some(text=>FIELD_CODE.test(text))) reasons.push('imported_word_field_codes');
@@ -24,6 +25,7 @@ export function assessQuestionQuality(question) {
   const mcq=/\b(?:MCQ|Multiple Choice|Multiple Response|True\/False)\b/i.test(String(q.type||''));
   if(mcq && options.length<2) reasons.push('missing_choice_options');
   if(options.some(o=>typeof o?.text!=='string'||!o.text.trim())) reasons.push('blank_choice_option');
+  if(!options.length&&!stem.includes('?')&&/^(?:which|where)\s+(?:is|are|it|lies|extends|supply|supplies|drain|drains|form|forms|empty|run|splits)\b/.test(stem))reasons.push('orphaned_explanatory_fragment');
   const texts=options.map(o=>(o?.text||'').trim().toLowerCase().replace(/\s+/g,' '));
   if(texts.length>1 && new Set(texts).size<texts.length) reasons.push('duplicate_choice_options');
   if(stem.length>2200) review.push('unusually_long_stem');

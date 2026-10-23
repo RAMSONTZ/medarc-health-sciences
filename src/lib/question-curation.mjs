@@ -5,6 +5,7 @@
  * A routing decision is NOT medical validation or copyright clearance.
  */
 import {resolveQuestionDepartment,isClinicalManagementQuestion,UNRESOLVED_SUBJECT} from './department-routing.mjs';
+import {inferContentDiscipline} from './content-discipline.mjs';
 const S={
  ANATOMY:'Human Anatomy',PHARMA:'Pharmacology',PHYS:'Human Physiology',BIO:'Medical Biochemistry',
  PATH:'General Pathology',MICRO:'Microbiology',PARA:'Parasitology',HIST:'Histology',EMBRYO:'Embryology',
@@ -230,6 +231,12 @@ export function curateQuestion(question){
    subject=UNRESOLVED_SUBJECT;reason='anatomy_management_hard_boundary';review=true;
  }
  if(subject===UNRESOLVED_SUBJECT)review=true;
+ const content=inferContentDiscipline(question);
+ if(content){
+  subject=content.subject;reason=content.reason;confidence=content.confidence;
+  // A content rule is an automated suggestion, not a completed editorial review.
+  review=subject!==source||review;
+ }
  if(CONTAMINATED.test(full))review=true;
  // Never inherit a clearly foreign topic after changing departments.
  const same=subject===source;
@@ -263,6 +270,11 @@ export function curateQuestion(question){
  }
  if(!topic){
   topic='Topic review required';review=true;topicReason='unresolved_topic';
+ }
+ if(content?.topic){topic=content.topic;topicReason='explicit_content_evidence';}
+ if(question?.editorialReview){
+  subject=question.editorialReview.subject;topic=question.editorialReview.topic;
+  reason='individually_reviewed_question';topicReason='individually_reviewed_topic';confidence='editorial';review=false;
  }
  if(subject===S.ANATOMY && explicitClinical){subject=UNRESOLVED_SUBJECT;topic='Topic review required';review=true;}
  if(subject!==source && reason==='source_subject_retained')reason='cross_subject_content';
